@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login – DD Books</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bangers&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8001C;
+    --blue: #1565C0;
+    --yellow: #FFD700;
+    --white: #F5F5F5;
+    --black: #0A0A0A;
+    --mid: #1a1a1a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: radial-gradient(circle at 30% 20%, #1a0005, #000810);
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  /* Web grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.06;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, #fff 39px, #fff 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, #fff 39px, #fff 40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Halftone dots */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 18px 18px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .back-link {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--white); }
+
+  .login-box {
+    position: relative;
+    z-index: 10;
+    background: #0f0f0f;
+    border: 2px solid var(--red);
+    width: 100%;
+    max-width: 360px;
+    padding: 40px 36px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+    box-shadow: 0 0 60px rgba(232,0,28,0.2), inset 0 0 30px rgba(0,0,0,0.5);
+    animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .login-box::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid rgba(21,101,192,0.25);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+    pointer-events: none;
+  }
+
+  /* Spider logo */
+  .sp-logo {
+    display: block;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+  }
+
+  .login-title {
+    font-family: 'Bangers', cursive;
+    font-size: 2.4rem;
+    color: var(--yellow);
+    letter-spacing: 4px;
+    text-align: center;
+    margin-bottom: 4px;
+    text-shadow: 2px 2px 0 var(--red), 0 0 30px rgba(255,215,0,0.3);
+    transition: all 0.3s ease;
+  }
+
+  .login-sub {
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  /* Tab switcher */
+  .tab-row {
+    display: flex;
+    margin-bottom: 24px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: rgba(255,255,255,0.4);
+    background: transparent;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .tab.active {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .tab:not(.active):hover {
+    color: var(--white);
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* Fields */
+  .field-wrap {
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
+  }
+
+  .field-wrap.hidden {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+  }
+
+  .field-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 6px;
+  }
+
+  .sp-input {
+    width: 100%;
+    background: #181818;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    outline: none;
+    padding: 11px 16px;
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+
+  .sp-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 2px rgba(21,101,192,0.2);
+  }
+
+  .sp-input::placeholder { color: rgba(255,255,255,0.2); }
+
+  .sp-input.error { border-color: var(--red); }
+
+  /* Password strength */
+  .strength-bar {
+    height: 3px;
+    background: #222;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .strength-fill {
+    height: 100%;
+    width: 0;
+    background: var(--red);
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+
+  .strength-label {
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.3);
+    min-height: 14px;
+    transition: color 0.3s;
+  }
+
+  /* Error message */
+  .err-msg {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--red);
+    margin-top: 5px;
+    min-height: 16px;
+    display: none;
+  }
+
+  /* Submit button */
+  .sp-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    background: var(--yellow);
+    color: #000;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.3rem;
+    letter-spacing: 4px;
+    border: none;
+    cursor: pointer;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: all 0.2s ease;
+    box-shadow: 3px 3px 0 var(--red);
+  }
+
+  .sp-btn:hover {
+    background: var(--white);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--red);
+  }
+
+  .sp-btn:active { transform: translate(0,0); box-shadow: 1px 1px 0 var(--red); }
+
+  .sp-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Bottom toggle */
+  .bottom-link {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .bottom-link span {
+    color: var(--yellow);
+    cursor: pointer;
+    transition: color 0.2s;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+  }
+
+  .bottom-link span:hover { color: #fff; text-decoration-color: var(--yellow); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #111;
+    border: 1.5px solid var(--red);
+    padding: 12px 28px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    color: var(--white);
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    z-index: 9999;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+    opacity: 0;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Back to DD Books</a>
+
+<div class="login-box">
+
+  <!-- Spider logo SVG -->
+  <svg class="sp-logo" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="28" cy="28" r="27" fill="#0f0f0f" stroke="#E8001C" stroke-width="2"/>
+    <ellipse cx="28" cy="28" rx="14" ry="9" fill="#E8001C"/>
+    <ellipse cx="28" cy="28" rx="8.5" ry="14" fill="#E8001C"/>
+    <circle cx="28" cy="28" r="5.5" fill="#111"/>
+    <line x1="1" y1="28" x2="55" y2="28" stroke="#111" stroke-width="1.8"/>
+    <line x1="28" y1="1" x2="28" y2="55" stroke="#111" stroke-width="1.8"/>
+    <line x1="6" y1="10" x2="50" y2="46" stroke="#111" stroke-width="1.1"/>
+    <line x1="50" y1="10" x2="6" y2="46" stroke="#111" stroke-width="1.1"/>
+  </svg>
+
+  <div class="login-title" id="formTitle">WELCOME BACK</div>
+  <div class="login-sub">DD Books — Spider-Verse</div>
+
+  <div class="tab-row">
+    <button class="tab active" onclick="setMode('login')">Login</button>
+    <button class="tab" onclick="setMode('signup')">Sign Up</button>
+  </div>
+
+  <!-- Name (signup only) -->
+  <div class="field-wrap hidden" id="nameWrap">
+    <div class="field-label">Full Name</div>
+    <input class="sp-input" type="text" id="nameInput" placeholder="Peter Parker" autocomplete="name">
+    <div class="err-msg" id="nameErr">Name is required</div>
+  </div>
+
+  <!-- Email -->
+  <div class="field-wrap" id="emailWrap">
+    <div class="field-label">Email</div>
+    <input class="sp-input" type="email" id="emailInput" placeholder="hero@spiderverse.com" autocomplete="email">
+    <div class="err-msg" id="emailErr">Enter a valid email</div>
+  </div>
+
+  <!-- Password -->
+  <div class="field-wrap" id="passWrap">
+    <div class="field-label">Password</div>
+    <input class="sp-input" type="password" id="passInput" placeholder="••••••••" autocomplete="current-password" oninput="onPasswordInput(this.value)">
+    <div id="strengthBarWrap" style="display:none;">
+      <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+      <div class="strength-label" id="strengthLabel"></div>
+    </div>
+    <div class="err-msg" id="passErr">Password must be at least 6 characters</div>
+  </div>
+
+  <button class="sp-btn" id="mainBtn" onclick="handleSubmit()">SWING IN</button>
+
+  <div class="bottom-link" id="toggleText">
+    No account? <span onclick="setMode('signup')">Join the Verse</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let currentMode = 'login';
+
+  // If already logged in, redirect immediately
+  const loggedIn = localStorage.getItem('ddbooks_user');
+  if (loggedIn) {
+    window.location.href = 'index.html';
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    const isSignup = mode === 'signup';
+
+    document.querySelectorAll('.tab').forEach((b, i) => {
+      b.classList.toggle('active', (i === 0 && !isSignup) || (i === 1 && isSignup));
+    });
+
+    document.getElementById('formTitle').innerText = isSignup ? 'JOIN THE VERSE' : 'WELCOME BACK';
+    document.getElementById('mainBtn').innerText = isSignup ? 'CREATE ACCOUNT' : 'SWING IN';
+    document.getElementById('toggleText').innerHTML = isSignup
+      ? 'Have an account? <span onclick="setMode(\'login\')">Log in</span>'
+      : 'No account? <span onclick="setMode(\'signup\')">Join the Verse</span>';
+
+    const nameWrap = document.getElementById('nameWrap');
+    const strengthWrap = document.getElementById('strengthBarWrap');
+
+    if (isSignup) {
+      nameWrap.classList.remove('hidden');
+      nameWrap.style.maxHeight = '80px';
+      nameWrap.style.opacity = '1';
+      strengthWrap.style.display = 'block';
+      document.getElementById('passInput').setAttribute('autocomplete', 'new-password');
+    } else {
+      nameWrap.classList.add('hidden');
+      nameWrap.style.maxHeight = '0';
+      nameWrap.style.opacity = '0';
+      strengthWrap.style.display = 'none';
+      document.getElementById('passInput').setAttribute('autocomplete', 'current-password');
+    }
+
+    clearErrors();
+  }
+
+  function onPasswordInput(val) {
+    if (currentMode !== 'signup') return;
+    const fill = document.getElementById('strengthFill');
+    const label = document.getElementById('strengthLabel');
+    let score = 0;
+    if (val.length >= 6) score += 25;
+    if (val.length >= 10) score += 20;
+    if (/[A-Z]/.test(val)) score += 25;
+    if (/[0-9]/.test(val)) score += 15;
+    if (/[!@#$%^&*]/.test(val)) score += 15;
+
+    fill.style.width = Math.min(score, 100) + '%';
+
+    if (score < 30) {
+      fill.style.background = '#E8001C';
+      label.innerText = 'Weak';
+      label.style.color = '#E8001C';
+    } else if (score < 65) {
+      fill.style.background = '#FFD700';
+      label.innerText = 'Getting there';
+      label.style.color = '#FFD700';
+    } else {
+      fill.style.background = '#00c853';
+      label.innerText = 'Strong';
+      label.style.color = '#00c853';
+    }
+  }
+
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    el.innerText = msg;
+    el.style.display = 'block';
+    const input = el.previousElementSibling.tagName === 'INPUT'
+      ? el.previousElementSibling
+      : el.parentElement.querySelector('input');
+    if (input) input.classList.add('error');
+  }
+
+  function clearErrors() {
+    document.querySelectorAll('.err-msg').forEach(e => e.style.display = 'none');
+    document.querySelectorAll('.sp-input').forEach(i => i.classList.remove('error'));
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function handleSubmit() {
+    clearErrors();
+    const email = document.getElementById('emailInput').value.trim();
+    const pass = document.getElementById('passInput').value;
+    let valid = true;
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('emailErr', 'Enter a valid email address');
+      valid = false;
+    }
+
+    if (!pass || pass.length < 6) {
+      showError('passErr', 'Password must be at least 6 characters');
+      valid = false;
+    }
+
+    if (currentMode === 'signup') {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) {
+        showError('nameErr', 'What do we call you, hero?');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Check if account exists
+      const existing = JSON.parse(localStorage.getItem('ddbooks_accounts') || '{}');
+      if (existing[email]) {
+        showError('emailErr', 'Account already exists. Try logging in.');
+        return;
+      }
+
+      // Save account
+      existing[email] = { name, email, password: pass };
+      localStorage.setItem('ddbooks_accounts', JSON.stringify(existing));
+      localStorage.setItem('ddbooks_user', JSON.stringify({ name, email }));
+
+      showToast('Account created! Welcome to the Spider-Verse!');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+
+    } else {
+      if (!valid) return;
+
+      const accounts = JSON.parse(localStorage.getItem('ddbooks_accounts') || '{}');
+      const account = accounts[email];
+
+      if (!account || account.password !== pass) {
+        showError('passErr', 'Incorrect email or password');
+        return;
+      }
+
+      localStorage.setItem('ddbooks_user', JSON.stringify({ name: account.name, email }));
+      showToast('Welcome back, ' + account.name + '!');
+      setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+    }
+  }
+
+  // Allow Enter key to submit
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSubmit();
+  });
+</script>
+</body>
+</html>
