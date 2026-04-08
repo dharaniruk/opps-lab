@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Comics – Web-Slinger Reviews</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bangers&family=Boogaloo&family=Rajdhani:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --red: #E8001C;
+            --blue: #1565C0;
+            --yellow: #FFD700;
+            --white: #F5F5F5;
+            --black: #0A0A0A;
+            --mid: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, .03) 1px, transparent 1px);
+            background-size: 18px 18px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 36px 20px 20px;
+            background: linear-gradient(180deg, #1a0000 0%, var(--black) 100%);
+            border-bottom: 3px solid var(--red);
+        }
+
+        .logo {
+            font-family: 'Boogaloo', cursive;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            color: var(--red);
+            letter-spacing: 4px;
+            line-height: 1;
+            text-shadow: 4px 4px 0 #000, 0 0 40px rgba(232, 0, 28, .5);
+            animation: flicker 4s infinite alternate;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            95% {
+                opacity: 1
+            }
+
+            96% {
+                opacity: .85
+            }
+
+            97% {
+                opacity: 1
+            }
+
+            98% {
+                opacity: .9
+            }
+
+            100% {
+                opacity: 1
+            }
+        }
+
+        .tagline {
+            font-size: clamp(.7rem, 2vw, 1rem);
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--white);
+            margin-top: 4px;
+            opacity: .7;
+        }
+
+        .account-widget {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            z-index: 50;
+        }
+
+        .account-btn {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: rgba(10, 10, 10, .85);
+            border: 1.5px solid var(--red);
+            padding: 7px 14px 7px 8px;
+            cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all .2s;
+        }
+
+        .account-btn:hover {
+            background: rgba(232, 0, 28, .15);
+            border-color: var(--yellow);
+        }
+
+        .account-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bangers', cursive;
+            font-size: 1rem;
+            color: #fff;
+            border: 1.5px solid var(--yellow);
+            flex-shrink: 0;
+        }
+
+        .account-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--white);
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #111;
+            border: 1.5px solid var(--red);
+            min-width: 170px;
+            display: none;
+            flex-direction: column;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .6);
+            z-index: 200;
+        }
+
+        .account-dropdown.open {
+            display: flex;
+        }
+
+        .dropdown-email {
+            padding: 10px 14px;
+            font-size: .75rem;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, .35);
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-item {
+            padding: 11px 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+            cursor: pointer;
+            transition: background .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .dropdown-item.logout {
+            color: var(--red);
+        }
+
+        .login-link-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(10, 10, 10, .85);
+            border: 1.5px solid rgba(255, 255, 255, .2);
+            padding: 8px 16px;
+            cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all .2s;
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .login-link-btn:hover {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        nav.navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 10, .92) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--blue);
+            padding: 10px 20px;
+        }
+
+        .navbar-nav {
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .nav-btn {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white) !important;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, .15);
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all .2s;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: var(--red) !important;
+            border-color: var(--red);
+            color: #fff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 0, 28, .4);
+        }
+
+        .navbar-toggler {
+            border-color: var(--red);
+            filter: invert(1);
+        }
+
+        .welcome-banner {
+            display: none;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(90deg, rgba(21, 101, 192, .15), rgba(232, 0, 28, .1), rgba(21, 101, 192, .15));
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            padding: 10px 20px;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .5);
+        }
+
+        .welcome-banner span {
+            color: var(--yellow);
+        }
+
+        .wishlist-nav-count {
+            display: inline-block;
+            background: var(--red);
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: .65rem;
+            text-align: center;
+            line-height: 18px;
+            margin-left: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+        }
+
+        /* LIBRARY HEADER */
+        .library-header {
+            position: relative;
+            z-index: 1;
+            padding: 48px 20px 32px;
+            text-align: center;
+            background: radial-gradient(ellipse at 50% 0%, rgba(232, 0, 28, .15) 0%, transparent 65%);
+        }
+
+        .section-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            color: var(--yellow);
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, .5);
+            line-height: 1;
+        }
+
+        /* FILTER */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .filter-btn {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .5);
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, .15);
+            padding: 7px 18px;
+            cursor: pointer;
+            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+            transition: all .2s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            color: #fff;
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        .grid-count {
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .3);
+            text-transform: uppercase;
+            padding-bottom: 24px;
+        }
+
+        /* COMIC CARDS */
+        .comic-card {
+            position: relative;
+            background: #111;
+            border: 2px solid rgba(255, 255, 255, .08);
+            cursor: pointer;
+            transition: all .25s ease, opacity .6s ease, transform .6s ease;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .comic-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .comic-card:hover {
+            border-color: var(--red);
+            transform: translateY(-6px) !important;
+            box-shadow: 0 12px 40px rgba(232, 0, 28, .3), 6px 6px 0 var(--blue);
+        }
+
+        .comic-card:hover .comic-overlay {
+            opacity: 1;
+        }
+
+        .comic-cover-placeholder {
+            width: 100%;
+            aspect-ratio: 2/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+        }
+
+        .cover-svg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+        }
+
+        .comic-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, .95) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 14px;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity .25s;
+        }
+
+        .overlay-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .overlay-btn {
+            font-family: 'Bebas Neue', cursive;
+            font-size: .8rem;
+            letter-spacing: 2px;
+            border: none;
+            padding: 6px 14px;
+            cursor: pointer;
+            clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+            transition: background .2s;
+            color: #000;
+            background: var(--yellow);
+        }
+
+        .overlay-btn:hover {
+            background: #fff;
+        }
+
+        .overlay-btn.wishlist-btn {
+            background: rgba(255, 255, 255, .15);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .3);
+        }
+
+        .overlay-btn.wishlist-btn:hover {
+            background: var(--red);
+        }
+
+        .overlay-btn.done-btn {
+            background: rgba(0, 200, 100, .2);
+            color: #0f0;
+            border: 1px solid rgba(0, 200, 100, .4);
+        }
+
+        .overlay-btn.done-btn:hover {
+            background: rgba(0, 200, 100, .5);
+        }
+
+        .star-row {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .star {
+            font-size: 1rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, .2);
+            transition: color .15s;
+            line-height: 1;
+        }
+
+        .star.lit,
+        .star:hover {
+            color: var(--yellow);
+        }
+
+        .star-row:hover .star {
+            color: var(--yellow);
+        }
+
+        .star-row .star:hover~.star {
+            color: rgba(255, 255, 255, .2);
+        }
+
+        .comic-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-family: 'Bangers', cursive;
+            font-size: .8rem;
+            letter-spacing: 2px;
+            padding: 3px 10px;
+            background: var(--red);
+            color: #fff;
+            clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+            z-index: 5;
+        }
+
+        .comic-badge.new {
+            background: var(--blue);
+        }
+
+        .comic-badge.classic {
+            background: #333;
+        }
+
+        .wishlist-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.1rem;
+            z-index: 6;
+            display: none;
+            color: var(--red);
+        }
+
+        .wishlist-badge.show {
+            display: block;
+        }
+
+        .done-badge {
+            position: absolute;
+            top: 32px;
+            right: 10px;
+            font-size: 1.1rem;
+            z-index: 6;
+            display: none;
+            color: #0f0;
+        }
+
+        .done-badge.show {
+            display: block;
+        }
+
+        .comic-info {
+            padding: 10px 12px 14px;
+        }
+
+        .comic-title {
+            font-family: 'Bangers', cursive;
+            font-size: 1.15rem;
+            letter-spacing: 2px;
+            color: var(--yellow);
+        }
+
+        .comic-desc {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, .4);
+            letter-spacing: .5px;
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+
+        .comic-rating-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+            font-size: .78rem;
+            color: var(--yellow);
+        }
+
+        footer {
+            background: #050505;
+            border-top: 3px solid var(--red);
+            padding: 28px 20px;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .9rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, .3);
+        }
+
+        footer span {
+            color: var(--red);
+        }
+
+        .toast-custom {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #111;
+            border: 1.5px solid var(--yellow);
+            color: var(--white);
+            padding: 12px 28px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-size: .9rem;
+            opacity: 0;
+            transition: all .3s;
+            z-index: 9999;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast-custom.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ── FLASHCARD FLIP ── */
+        .comic-card-wrapper {
+            perspective: 1000px;
+            height: 100%;
+        }
+
+        .comic-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(.4, 0, .2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .comic-card-wrapper.flipped .comic-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .comic-card,
+        .comic-card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .comic-card {
+            position: relative;
+        }
+
+        .comic-card-back {
+            position: absolute;
+            inset: 0;
+            transform: rotateY(180deg);
+            background: #111;
+            border: 2px solid var(--red);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 14px;
+            gap: 10px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s 0.25s;
+        }
+
+        .comic-card-wrapper.flipped .comic-card-back {
+            opacity: 1;
+        }
+
+        .back-title {
+            font-family: 'Bangers', cursive;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            color: var(--yellow);
+            line-height: 1.1;
+        }
+
+        .back-issue {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .7rem;
+            letter-spacing: 3px;
+            color: var(--red);
+            text-transform: uppercase;
+        }
+
+        .back-desc {
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .6);
+            line-height: 1.5;
+            letter-spacing: .3px;
+        }
+
+        .back-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .back-divider {
+            width: 40px;
+            height: 2px;
+            background: var(--red);
+            margin: 2px auto;
+        }
+
+        .flip-hint {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            font-size: .6rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, .25);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="account-widget" id="accountWidget"></div>
+        <div class="logo">Web-Slinger Reviews</div>
+        <div class="tagline">Your #1 Spider-Man Comic Rating Destination</div>
+    </header>
+
+    <nav class="navbar navbar-expand-md">
+        <div class="container-fluid justify-content-center">
+            <button class="navbar-toggler mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="mainNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a href="index.html" class="nav-btn">Home</a></li>
+                    <li class="nav-item"><a href="books.html" class="nav-btn active">All Comics</a></li>
+                    <li class="nav-item"><a href="wishlist.html" class="nav-btn">Wishlist <span
+                                class="wishlist-nav-count" id="wishlistCount">0</span></a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-btn">About</a></li>
+                    <li class="nav-item"><a href="login.html" class="nav-btn" id="navAuthBtn">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="welcome-banner" id="welcomeBanner">Welcome back, <span id="welcomeName">Hero</span>!</div>
+
+    <section class="library-header">
+        <div class="section-label">The Complete Collection</div>
+        <div class="section-title">All Spider-Man Comics</div>
+    </section>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterComics('all',this)">All</button>
+        <button class="filter-btn" onclick="filterComics('classic',this)">Classic</button>
+        <button class="filter-btn" onclick="filterComics('miles',this)">Miles Morales</button>
+        <button class="filter-btn" onclick="filterComics('spiderverse',this)">Spider-Verse</button>
+        <button class="filter-btn" onclick="filterComics('other',this)">Other Heroes</button>
+        <button class="filter-btn" onclick="filterComics('wishlist',this)">♥ My Wishlist</button>
+        <button class="filter-btn" onclick="filterComics('done',this)">✓ Read</button>
+    </div>
+    <div class="grid-count" id="gridCount">24 Comics</div>
+
+    <div class="container pb-5">
+        <div class="row g-3" id="comicsGrid">
+
+            <!-- COMIC CARDS - using a JS data array for cleanliness -->
+
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 <span>Web-Slinger Reviews</span> — All Rights Reserved</p>
+    </footer>
+    <div class="toast-custom" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const COMICS = [
+            // CLASSIC
+            { id: 'af15', cat: 'classic', badge: 'ORIGIN', badgeCls: '', title: 'Amazing Fantasy #15', desc: "Peter Parker's very first appearance — where it all began.", img: 'https://upload.wikimedia.org/wikipedia/en/1/1b/AmazingFantasy15.jpg', defaultRating: 5, svgBg: '#2a0000', svgText: 'AMAZING FANTASY #15' },
+            { id: 'asm1', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'The Amazing Spider-Man #1', desc: 'Peter goes solo. The Chameleon and the Fantastic Four make their appearances.', img: 'https://upload.wikimedia.org/wikipedia/en/7/70/AmazingSpiderMan1.jpg', defaultRating: 5, svgBg: '#1a0000', svgText: 'AMAZING SPIDER-MAN #1' },
+            { id: 'asm33', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'Amazing Spider-Man #33', desc: 'The iconic "If This Be My Destiny" — Peter lifts machinery from sheer will.', img: 'https://upload.wikimedia.org/wikipedia/en/3/3b/AmazingSpiderMan33.jpg', defaultRating: 5, svgBg: '#100000', svgText: 'AMAZING SPIDER-MAN #33' },
+            { id: 'asm121', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'Amazing Spider-Man #121', desc: 'The Night Gwen Stacy Died — one of the most heartbreaking comics ever.', img: 'https://upload.wikimedia.org/wikipedia/en/5/54/Amazing_Spider-Man_121.jpg', defaultRating: 5, svgBg: '#0a0015', svgText: 'ASM #121 — GWEN STACY' },
+            { id: 'asm300', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'Amazing Spider-Man #300', desc: "Venom's first full appearance as Spider-Man's deadly nemesis.", img: 'https://upload.wikimedia.org/wikipedia/en/8/82/Amazingspiderman300.jpg', defaultRating: 5, svgBg: '#050510', svgText: 'AMAZING SPIDER-MAN #300' },
+            { id: 'kraven', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: "Kraven's Last Hunt", desc: 'A haunting, psychological six-part masterpiece of a Spider-Man story.', img: 'https://upload.wikimedia.org/wikipedia/en/f/f3/Kraven%27s_Last_Hunt_tpb.jpg', defaultRating: 5, svgBg: '#0a1000', svgText: "KRAVEN'S LAST HUNT" },
+            { id: 'sptd1', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'Spectacular Spider-Man #1', desc: "Peter Parker's life under the spotlight in his second solo book.", img: 'https://upload.wikimedia.org/wikipedia/en/3/3f/Spectacular_Spider-Man_Vol_1_1.jpg', defaultRating: 4, svgBg: '#1a0a00', svgText: 'SPECTACULAR SPIDER-MAN' },
+            { id: 'symbiote', cat: 'classic', badge: 'EVENT', badgeCls: '', title: 'Secret Wars #8 (Black Suit)', desc: 'The birth of the alien symbiote costume — everything changed here.', img: 'https://upload.wikimedia.org/wikipedia/en/0/06/SecretWars8.jpg', defaultRating: 4, svgBg: '#000510', svgText: 'SECRET WARS #8' },
+
+            // MILES MORALES
+            { id: 'miles1', cat: 'miles', badge: 'MODERN', badgeCls: 'new', title: 'Miles Morales: Spider-Man #1', desc: "Brooklyn's own Spider-Man. Saladin Ahmed's acclaimed modern run begins.", img: 'https://upload.wikimedia.org/wikipedia/en/8/8e/Miles_Morales_Ultimate_Spider-Man_Vol_1_1.jpg', defaultRating: 5, svgBg: '#00001a', svgText: 'MILES MORALES #1' },
+            { id: 'mileso', cat: 'miles', badge: 'ORIGIN', badgeCls: '', title: 'Ultimate Comics: Spider-Man #1', desc: 'Miles Morales takes up the mantle in the Ultimate Universe. A debut for the ages.', img: 'https://upload.wikimedia.org/wikipedia/en/d/df/UltimateComicsSpiderMan1-2011.jpg', defaultRating: 5, svgBg: '#000020', svgText: 'ULTIMATE COMICS SM #1' },
+            { id: 'milesvp', cat: 'miles', badge: 'MODERN', badgeCls: 'new', title: 'Miles Morales: Visions', desc: 'A dazzling anthology exploring Miles across art styles and dimensions.', img: '', defaultRating: 4, svgBg: '#000030', svgText: 'MILES MORALES VISIONS' },
+
+            // SPIDER-VERSE
+            { id: 'gwen1', cat: 'spiderverse', badge: 'NEW', badgeCls: 'new', title: 'Spider-Gwen #1', desc: 'Ghost Spider of Earth-65 gets her own series. Stylish, irreverent, essential.', img: 'https://upload.wikimedia.org/wikipedia/en/1/15/Spider-Gwen_Vol_1_1.png', defaultRating: 5, svgBg: '#0a0a1a', svgText: 'SPIDER-GWEN #1' },
+            { id: 'sv2014', cat: 'spiderverse', badge: 'EVENT', badgeCls: '', title: 'Spider-Verse (2014)', desc: 'Every Spider-Man from every universe — united against Morlun and the Inheritors.', img: 'https://upload.wikimedia.org/wikipedia/en/c/c0/Spider-Verse_Vol_1_1.jpg', defaultRating: 5, svgBg: '#1a0820', svgText: 'SPIDER-VERSE (2014)' },
+            { id: 'sv2099', cat: 'spiderverse', badge: 'CLASSIC', badgeCls: 'classic', title: 'Spider-Man 2099 #1', desc: 'Miguel O\'Hara in the neon-lit dystopia of Nueva York in the year 2099.', img: 'https://upload.wikimedia.org/wikipedia/en/b/b5/Spider-Man_2099_Vol_1_1.jpg', defaultRating: 4, svgBg: '#001020', svgText: 'SPIDER-MAN 2099' },
+            { id: 'silk1', cat: 'spiderverse', badge: 'NEW', badgeCls: 'new', title: 'Silk #1', desc: 'Cindy Moon — bitten by the same spider as Peter — steps out of the bunker.', img: 'https://upload.wikimedia.org/wikipedia/en/c/c6/Silk_1.jpg', defaultRating: 4, svgBg: '#1a0010', svgText: 'SILK #1' },
+            { id: 'spham', cat: 'spiderverse', badge: 'FUN', badgeCls: '', title: 'Spider-Ham: Untold Tales', desc: 'Peter Porker, the Spectacular Spider-Ham! Looney Tunes meets Marvel chaos.', img: '', defaultRating: 4, svgBg: '#1a0800', svgText: 'SPIDER-HAM' },
+            { id: 'spnoir', cat: 'spiderverse', badge: 'NOIR', badgeCls: 'classic', title: 'Spider-Man Noir #1', desc: '1930s Great Depression New York. A darker, grittier Spider-Man.', img: 'https://upload.wikimedia.org/wikipedia/en/2/28/Spider-Man_Noir_1.jpg', defaultRating: 4, svgBg: '#080808', svgText: 'SPIDER-MAN NOIR' },
+            { id: 'gwenghost', cat: 'spiderverse', badge: 'NEW', badgeCls: 'new', title: 'Ghost-Spider #1', desc: 'Gwen Stacy crosses dimensions, balancing college life with heroing.', img: '', defaultRating: 4, svgBg: '#0d0d20', svgText: 'GHOST-SPIDER #1' },
+
+            // OTHER HEROES
+            { id: 'scarletsp', cat: 'other', badge: 'RARE', badgeCls: '', title: 'Scarlet Spider #1', desc: 'Ben Reilly — the clone of Peter Parker — strikes out on his own in Houston.', img: 'https://upload.wikimedia.org/wikipedia/en/a/a3/Scarlet_Spider_Vol_2_1.jpg', defaultRating: 4, svgBg: '#200010', svgText: 'SCARLET SPIDER' },
+            { id: 'ben1', cat: 'other', badge: 'CLONE', badgeCls: 'classic', title: 'The Lost Years (Ben Reilly)', desc: 'The Clone Saga companion story — Ben Reilly on the run across America.', img: '', defaultRating: 3, svgBg: '#150000', svgText: 'THE LOST YEARS' },
+            { id: 'spwoman', cat: 'other', badge: 'CLASSIC', badgeCls: 'classic', title: 'Spider-Woman #1', desc: 'Jessica Drew — the original Spider-Woman — in her landmark solo debut.', img: 'https://upload.wikimedia.org/wikipedia/en/5/56/Spider_Woman_1_1978.jpg', defaultRating: 4, svgBg: '#1a0020', svgText: 'SPIDER-WOMAN #1' },
+            { id: 'superioram', cat: 'other', badge: 'EVENT', badgeCls: '', title: 'Superior Spider-Man #1', desc: 'Doctor Octopus becomes Spider-Man. One of the most controversial runs ever.', img: 'https://upload.wikimedia.org/wikipedia/en/e/ed/Superior_Spider-Man_Vol_1_1.jpg', defaultRating: 5, svgBg: '#001520', svgText: 'SUPERIOR SPIDER-MAN' },
+            { id: 'spgirlam', cat: 'other', badge: 'NEW', badgeCls: 'new', title: 'Spider-Girl #1', desc: "May 'Mayday' Parker — Peter's daughter from the MC2 universe — takes the web.", img: 'https://upload.wikimedia.org/wikipedia/en/e/e0/Spider-Girl_Vol_1_1.jpg', defaultRating: 4, svgBg: '#1a0800', svgText: "SPIDER-GIRL (MAY PARKER)" },
+            { id: 'symbiokng', cat: 'other', badge: 'EVENT', badgeCls: '', title: 'Venom #1 (2018)', desc: "Donny Cates reimagines Venom as a cosmic horror. Eddie Brock's magnum opus.", img: 'https://upload.wikimedia.org/wikipedia/en/a/ac/Venom_Vol_4_1.jpg', defaultRating: 5, svgBg: '#000510', svgText: 'VENOM #1 (2018)' },
+            { id: 'asm2018', cat: 'classic', badge: 'MODERN', badgeCls: 'new', title: 'Amazing Spider-Man (2018)', desc: "Nick Spencer's acclaimed run: Peter re-graduates, life resets, Kindred looms.", img: 'https://upload.wikimedia.org/wikipedia/en/4/43/Amazing_Spider-Man_vol._5_1.jpg', defaultRating: 4, svgBg: '#1a0000', svgText: 'AMAZING SPIDER-MAN 2018' },
+
+            // ── NEW ADDITIONS ──
+            { id: 'reign2', cat: 'classic', badge: 'NEW', badgeCls: 'new', title: 'Spider-Man: Reign 2', desc: "The sequel to the dystopian classic — an older Peter Parker returns to a city in chaos once more.", img: '', defaultRating: 4, svgBg: '#1a0808', svgText: 'REIGN 2' },
+            { id: 'symbiote2099', cat: 'spiderverse', badge: 'NEW', badgeCls: 'new', title: 'Symbiote Spider-Man 2099', desc: "Miguel O'Hara bonds with an alien symbiote in the neon future of Nueva York.", img: '', defaultRating: 4, svgBg: '#000d20', svgText: 'SYMBIOTE SM 2099' },
+            { id: 'asmannual', cat: 'classic', badge: 'ANNUAL', badgeCls: '', title: 'Amazing Spider-Man Annual', desc: "Oversized annual adventures expanding the world of Peter Parker beyond the monthly series.", img: '', defaultRating: 3, svgBg: '#1a0500', svgText: 'ASM ANNUAL' },
+            { id: 'asmfacsimile', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'Amazing Spider-Man: Facsimile Edition', desc: "Exact reprints of landmark ASM issues — a collector's dream in original newsprint style.", img: '', defaultRating: 4, svgBg: '#150a00', svgText: 'ASM FACSIMILE' },
+            { id: 'ultimatesm2024', cat: 'classic', badge: 'NEW', badgeCls: 'new', title: 'Ultimate Spider-Man (2024)', desc: "Jonathan Hickman reimagines Peter Parker in a bold new Ultimate Universe for a new era.", img: 'https://upload.wikimedia.org/wikipedia/en/5/54/Ultimate_Spider-Man_2024_1.jpg', defaultRating: 5, svgBg: '#00081a', svgText: 'ULTIMATE SM 2024' },
+            { id: 'giantsize', cat: 'classic', badge: 'RARE', badgeCls: '', title: 'Giant-Size Spider-Man', desc: "Oversized landmark issues featuring epic team-ups and extended storylines.", img: '', defaultRating: 3, svgBg: '#1a0a00', svgText: 'GIANT-SIZE SM' },
+            { id: 'deathspiral', cat: 'classic', badge: 'EVENT', badgeCls: '', title: 'Amazing Spider-Man/Venom: Death Spiral', desc: "Spider-Man and Venom are forced into an uneasy alliance as a deadly threat spirals out of control.", img: '', defaultRating: 4, svgBg: '#050510', svgText: 'DEATH SPIRAL' },
+            { id: 'spectbnd', cat: 'classic', badge: 'MODERN', badgeCls: 'new', title: 'Spectacular Spider-Man: Brand New Day', desc: "Peter's fresh start following One More Day — new villains, new romance, new beginning.", img: '', defaultRating: 3, svgBg: '#001010', svgText: 'BRAND NEW DAY' },
+            { id: 'sin16', cat: 'classic', badge: 'EVENT', badgeCls: '', title: 'Spider-Man vs. The Sinister Sixteen', desc: "Sixteen of Spider-Man's deadliest enemies unite for an all-out war on the wall-crawler.", img: '', defaultRating: 4, svgBg: '#150010', svgText: 'SINISTER SIXTEEN' },
+            { id: 'spideyfriends', cat: 'other', badge: 'FUN', badgeCls: '', title: 'Spidey & His Amazing Friends CGD 2026', desc: "The animated team of Spider-Man, Ghost-Spider and Spin in a brand-new all-ages comic special.", img: '', defaultRating: 3, svgBg: '#001a00', svgText: 'SPIDEY AMAZING FRIENDS' },
+            { id: 'longywayhome', cat: 'classic', badge: 'NEW', badgeCls: 'new', title: 'Spider-Man: Long Way Home', desc: "Peter Parker goes off the grid on a cross-country journey of self-discovery and redemption.", img: '', defaultRating: 4, svgBg: '#0a0a1a', svgText: 'LONG WAY HOME' },
+            { id: 'homeroomheroes', cat: 'other', badge: 'NEW', badgeCls: 'new', title: 'Spider-Man: Homeroom Heroes', desc: "Younger Peter Parker navigates high school while learning what it truly means to be a hero.", img: '', defaultRating: 3, svgBg: '#001500', svgText: 'HOMEROOM HEROES' },
+            { id: 'websm', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'Web of Spider-Man', desc: "Peter Parker's third ongoing title — showcasing street-level adventures in New York City.", img: 'https://upload.wikimedia.org/wikipedia/en/e/ef/Web_of_Spider-Man_Vol_1_1.jpg', defaultRating: 4, svgBg: '#0a0015', svgText: 'WEB OF SPIDER-MAN' },
+            { id: 'symbiepred', cat: 'other', badge: 'EVENT', badgeCls: '', title: 'Amazing Spider-Man: Symbie Predator vs. Spider-Man', desc: "The apex symbiote predator hunts Spider-Man across New York in a brutal cat-and-mouse thriller.", img: '', defaultRating: 4, svgBg: '#050510', svgText: 'SYMBIE PREDATOR' },
+            { id: 'amazingdc', cat: 'other', badge: 'RARE', badgeCls: '', title: 'Marvel/DC: Spider-Man/Superman', desc: "The ultimate crossover — Peter Parker and Clark Kent share a world-saving adventure.", img: '', defaultRating: 4, svgBg: '#000a1a', svgText: 'SM / SUPERMAN' },
+            { id: 'ultsmfacsimile', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'Ultimate Spider-Man Facsimile Edition', desc: "Exact reproductions of the landmark Bendis/Bagley Ultimate Spider-Man issues.", img: '', defaultRating: 4, svgBg: '#00001a', svgText: 'ULTIMATE FACSIMILE' },
+            { id: 'astonmiles', cat: 'miles', badge: 'NEW', badgeCls: 'new', title: 'Astonishing Miles Morales', desc: "Miles Morales stars in an all-new astonishing solo adventure pushing his limits as Spider-Man.", img: '', defaultRating: 4, svgBg: '#00001a', svgText: 'ASTONISHING MILES' },
+            { id: 'artofthwip', cat: 'miles', badge: 'NEW', badgeCls: 'new', title: 'Miles Morales: The Art of Thwip', desc: "A stunning visual showcase of Miles Morales across 2026 stories — art, action, and heart.", img: '', defaultRating: 4, svgBg: '#00000d', svgText: 'ART OF THWIP' },
+            { id: 'blacksuitblood', cat: 'classic', badge: 'HOT', badgeCls: '', title: 'Spider-Man: Black Suit & Blood', desc: "Brutal prestige-format anthology stories set during Peter's symbiote era — dark and visceral.", img: '', defaultRating: 5, svgBg: '#050505', svgText: 'BLACK SUIT & BLOOD' },
+            { id: 'asmfacs2024', cat: 'classic', badge: 'CLASSIC', badgeCls: 'classic', title: 'Amazing Spider-Man: Facsimile Edition (2024)', desc: "2024 line of faithful reprints celebrating the greatest ASM issues in original comic format.", img: '', defaultRating: 4, svgBg: '#150800', svgText: 'ASM FACSIMILE 2024' },
+            { id: 'spwolverine', cat: 'other', badge: 'EVENT', badgeCls: '', title: 'Spider-Man & Wolverine', desc: "Marvel's most iconic duo reluctantly team up when a mutual enemy threatens both their worlds.", img: '', defaultRating: 4, svgBg: '#0f0800', svgText: 'SM & WOLVERINE' },
+            { id: 'spnoirv2', cat: 'spiderverse', badge: 'NOIR', badgeCls: 'classic', title: 'Spider-Man Noir (New Series)', desc: "The shadowy wall-crawler of 1930s New York returns in a fresh new noir crime thriller arc.", img: '', defaultRating: 4, svgBg: '#080808', svgText: 'SPIDER-MAN NOIR' },
+            { id: 'goofysm', cat: 'other', badge: 'FUN', badgeCls: '', title: 'Marvel & Disney: What If...? Goofy Became Spider-Man', desc: "A-hyuck! The lovable Goofy gets bitten by a radioactive spider in this wild Disney/Marvel mashup.", img: '', defaultRating: 3, svgBg: '#1a1000', svgText: 'GOOFY SPIDER-MAN' },
+        ];
+
+        const SVG_DESIGNS = {
+            // ── CLASSIC PETER PARKER ──
+            'af15': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="g${c.id}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#8b0000"/><stop offset="100%" stop-color="#1a0000"/></radialGradient></defs><rect width="200" height="300" fill="url(#g${c.id})"/><polygon points="100,20 120,80 180,80 133,115 150,175 100,140 50,175 67,115 20,80 80,80" fill="#FFD700" opacity="0.9"/><circle cx="100" cy="110" r="30" fill="#E8001C"/><text x="100" y="220" text-anchor="middle" font-family="Bangers,cursive" font-size="15" fill="#FFD700" letter-spacing="2">AMAZING</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#fff" letter-spacing="1">FANTASY #15</text><text x="100" y="270" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#E8001C">WHERE IT ALL BEGAN</text></svg>`,
+
+            'asm1': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0000"/><rect x="0" y="0" width="200" height="8" fill="#E8001C"/><rect x="0" y="292" width="200" height="8" fill="#E8001C"/><line x1="100" y1="0" x2="30" y2="300" stroke="rgba(232,0,28,0.2)" stroke-width="1"/><line x1="100" y1="0" x2="170" y2="300" stroke="rgba(232,0,28,0.2)" stroke-width="1"/><line x1="100" y1="0" x2="100" y2="300" stroke="rgba(232,0,28,0.15)" stroke-width="1"/><circle cx="100" cy="110" r="55" fill="none" stroke="#E8001C" stroke-width="2" opacity="0.4"/><circle cx="100" cy="110" r="35" fill="none" stroke="#E8001C" stroke-width="1.5" opacity="0.6"/><circle cx="100" cy="110" r="18" fill="#E8001C"/><text x="100" y="220" text-anchor="middle" font-family="Bangers,cursive" font-size="16" fill="#FFD700" letter-spacing="3">AMAZING</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">SPIDER-MAN #1</text></svg>`,
+
+            'asm33': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#100000"/><rect x="20" y="160" width="160" height="80" fill="#2a1000" rx="4" opacity="0.8"/><rect x="40" y="140" width="120" height="20" fill="#333" rx="2"/><rect x="20" y="160" width="20" height="80" fill="#444"/><rect x="160" y="160" width="20" height="80" fill="#444"/><ellipse cx="100" cy="130" rx="25" ry="35" fill="#E8001C" opacity="0.9"/><line x1="75" y1="100" x2="30" y2="60" stroke="rgba(232,0,28,0.5)" stroke-width="2"/><line x1="125" y1="100" x2="170" y2="60" stroke="rgba(232,0,28,0.5)" stroke-width="2"/><line x1="100" y1="95" x2="100" y2="30" stroke="rgba(232,0,28,0.4)" stroke-width="1.5"/><text x="100" y="265" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="1">IF THIS BE MY DESTINY</text><text x="100" y="285" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#E8001C">ASM #33</text></svg>`,
+
+            'asm121': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sky${c.id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a0015"/><stop offset="100%" stop-color="#1a0030"/></linearGradient></defs><rect width="200" height="300" fill="url(#sky${c.id})"/><rect x="0" y="200" width="200" height="100" fill="#080010"/><line x1="100" y1="0" x2="140" y2="120" stroke="rgba(200,200,255,0.3)" stroke-width="1.5"/><ellipse cx="140" cy="140" rx="15" ry="20" fill="#ffe0e0" opacity="0.8"/><ellipse cx="60" cy="155" rx="12" ry="18" fill="#E8001C" opacity="0.7"/><text x="100" y="235" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#fff" letter-spacing="1">THE NIGHT</text><text x="100" y="253" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">GWEN STACY DIED</text><text x="100" y="280" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">ASM #121</text></svg>`,
+
+            'asm300': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#050510"/><ellipse cx="100" cy="130" rx="70" ry="90" fill="#0a0a0a" stroke="#fff" stroke-width="2"/><ellipse cx="75" cy="105" rx="22" ry="15" fill="white"/><ellipse cx="125" cy="105" rx="22" ry="15" fill="white"/><ellipse cx="75" cy="105" rx="14" ry="10" fill="#111"/><ellipse cx="125" cy="105" rx="14" ry="10" fill="#111"/><path d="M60,145 Q100,175 140,145" stroke="white" stroke-width="3" fill="none"/><rect x="55" y="145" width="90" height="8" fill="white" rx="2"/><text x="100" y="250" text-anchor="middle" font-family="Bangers,cursive" font-size="16" fill="#fff" letter-spacing="3">VENOM</text><text x="100" y="270" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">FIRST FULL APPEARANCE</text><text x="100" y="288" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#E8001C">ASM #300</text></svg>`,
+
+            'kraven': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="kg${c.id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a1000"/><stop offset="100%" stop-color="#1a0000"/></linearGradient></defs><rect width="200" height="300" fill="url(#kg${c.id})"/><rect x="0" y="180" width="200" height="120" fill="#0a0800"/><polygon points="60,100 80,60 100,90 120,50 140,100 120,120 80,120" fill="#8B4513" opacity="0.8"/><line x1="40" y1="80" x2="160" y2="80" stroke="#8B4513" stroke-width="8" opacity="0.5"/><circle cx="100" cy="140" r="20" fill="#E8001C" opacity="0.6"/><line x1="100" y1="50" x2="100" y2="0" stroke="#FFD700" stroke-width="2" opacity="0.4"/><text x="100" y="230" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">KRAVEN'S</text><text x="100" y="250" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">LAST HUNT</text></svg>`,
+
+            'sptd1': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0a00"/><circle cx="100" cy="100" r="60" fill="none" stroke="#E8001C" stroke-width="2" stroke-dasharray="8,4"/><circle cx="100" cy="100" r="40" fill="none" stroke="#FFD700" stroke-width="1" stroke-dasharray="4,4"/><polygon points="100,60 115,90 148,90 122,110 132,143 100,123 68,143 78,110 52,90 85,90" fill="#E8001C" opacity="0.8"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">SPECTACULAR</text><text x="100" y="235" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">SPIDER-MAN #1</text></svg>`,
+
+            'symbiote': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#000510"/><circle cx="100" cy="110" r="65" fill="#0a0a20"/><circle cx="100" cy="110" r="65" fill="none" stroke="#1565C0" stroke-width="2" opacity="0.6"/><ellipse cx="100" cy="110" rx="30" ry="40" fill="#111" stroke="#fff" stroke-width="1.5"/><ellipse cx="85" cy="95" rx="10" ry="7" fill="white"/><ellipse cx="115" cy="95" rx="10" ry="7" fill="white"/><path d="M75,130 Q100,150 125,130" stroke="#fff" stroke-width="2" fill="none"/><text x="100" y="225" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#aaa" letter-spacing="2">SECRET WARS #8</text><text x="100" y="248" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#fff" letter-spacing="2">BLACK SUIT</text><text x="100" y="268" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#1565C0">BIRTH OF THE SYMBIOTE</text></svg>`,
+
+            // ── MILES MORALES ──
+            'miles1': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="mg${c.id}" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#00003a"/><stop offset="100%" stop-color="#000010"/></radialGradient></defs><rect width="200" height="300" fill="url(#mg${c.id})"/><rect x="0" y="100" width="200" height="3" fill="#E8001C" opacity="0.4"/><rect x="0" y="200" width="200" height="3" fill="#E8001C" opacity="0.4"/><polygon points="100,50 115,85 153,85 123,107 134,143 100,120 66,143 77,107 47,85 85,85" fill="#E8001C"/><circle cx="100" cy="100" r="25" fill="#00001a" stroke="#fff" stroke-width="2"/><text x="100" y="220" text-anchor="middle" font-family="Bangers,cursive" font-size="18" fill="#E8001C" letter-spacing="3">MILES</text><text x="100" y="243" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">MORALES</text><text x="100" y="270" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#FFD700">SPIDER-MAN #1</text></svg>`,
+
+            'mileso': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#000020"/><line x1="0" y1="150" x2="200" y2="150" stroke="#E8001C" stroke-width="2" opacity="0.5"/><line x1="100" y1="0" x2="100" y2="300" stroke="#1565C0" stroke-width="2" opacity="0.5"/><circle cx="100" cy="110" r="50" fill="none" stroke="#E8001C" stroke-width="1.5" stroke-dasharray="6,3"/><ellipse cx="100" cy="110" rx="22" ry="28" fill="#E8001C"/><ellipse cx="90" cy="100" rx="9" ry="6" fill="#fff"/><ellipse cx="110" cy="100" rx="9" ry="6" fill="#fff"/><text x="100" y="225" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#aaa" letter-spacing="2">ULTIMATE COMICS</text><text x="100" y="248" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#FFD700" letter-spacing="2">SPIDER-MAN #1</text><text x="100" y="270" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#E8001C">MILES MORALES DEBUT</text></svg>`,
+
+            'milesvp': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#000030"/>${[...Array(6)].map((_, i) => `<rect x="${20 + i * 28}" y="${30 + i * 20}" width="18" height="25" fill="rgba(232,0,28,0.${3 + i})" rx="2" transform="rotate(${-10 + i * 4},${29 + i * 28},${42 + i * 20})"/>`).join('')}<circle cx="100" cy="120" r="35" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.7"/><text x="100" y="220" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#FFD700" letter-spacing="2">MILES MORALES</text><text x="100" y="242" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="1">VISIONS</text></svg>`,
+
+            // ── SPIDER-VERSE ──
+            'gwen1': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="gg${c.id}" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#1a1a3a"/><stop offset="100%" stop-color="#0a0a20"/></radialGradient></defs><rect width="200" height="300" fill="url(#gg${c.id})"/><circle cx="100" cy="100" r="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/><circle cx="100" cy="100" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/><ellipse cx="100" cy="100" rx="28" ry="35" fill="#1a1a4a" stroke="#fff" stroke-width="2"/><ellipse cx="87" cy="88" rx="11" ry="8" fill="white"/><ellipse cx="113" cy="88" rx="11" ry="8" fill="white"/><text x="100" y="210" text-anchor="middle" font-family="Bangers,cursive" font-size="18" fill="#fff" letter-spacing="3">SPIDER</text><text x="100" y="232" text-anchor="middle" font-family="Bangers,cursive" font-size="15" fill="#FFD700" letter-spacing="2">GWEN #1</text><text x="100" y="258" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">EARTH-65 · GHOST SPIDER</text></svg>`,
+
+            'sv2014': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0820"/>${[...Array(8)].map((_, i) => `<ellipse cx="${25 + i * 22}" cy="${60 + Math.sin(i) * 30}" rx="10" ry="13" fill="rgba(232,0,28,0.${2 + i % 4})" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>`).join('')}<circle cx="100" cy="140" r="40" fill="#E8001C" opacity="0.9"/><ellipse cx="86" cy="128" rx="12" ry="9" fill="white"/><ellipse cx="114" cy="128" rx="12" ry="9" fill="white"/><text x="100" y="230" text-anchor="middle" font-family="Bangers,cursive" font-size="18" fill="#FFD700" letter-spacing="3">SPIDER</text><text x="100" y="252" text-anchor="middle" font-family="Bangers,cursive" font-size="15" fill="#fff" letter-spacing="2">VERSE 2014</text></svg>`,
+
+            'sv2099': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#001020"/><rect x="0" y="0" width="200" height="300" fill="url(#city${c.id})" opacity="0.3"/><defs><linearGradient id="city${c.id}" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#1565C0"/><stop offset="100%" stop-color="#001030"/></linearGradient></defs>${[...Array(8)].map((_, i) => `<rect x="${10 + i * 25}" y="${180 - i % 3 * 40}" width="15" height="${120 + i % 3 * 40}" fill="rgba(21,101,192,0.3)"/>`).join('')}<ellipse cx="100" cy="110" rx="28" ry="35" fill="#1565C0"/><ellipse cx="88" cy="98" rx="10" ry="7" fill="white"/><ellipse cx="112" cy="98" rx="10" ry="7" fill="white"/><text x="100" y="225" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#1565C0" letter-spacing="2">SPIDER-MAN</text><text x="100" y="248" text-anchor="middle" font-family="Bangers,cursive" font-size="20" fill="#FFD700" letter-spacing="3">2099</text></svg>`,
+
+            'silk1': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0010"/>${[...Array(12)].map((_, i) => `<line x1="${10 + i * 15}" y1="0" x2="${100}" y2="150" stroke="rgba(255,200,255,0.12)" stroke-width="1"/>`).join('')}<circle cx="100" cy="110" r="45" fill="none" stroke="rgba(255,150,200,0.4)" stroke-width="1.5"/><ellipse cx="100" cy="110" rx="20" ry="26" fill="#4a0030" stroke="#ffaadd" stroke-width="1.5"/><ellipse cx="90" cy="100" rx="8" ry="6" fill="white"/><ellipse cx="110" cy="100" rx="8" ry="6" fill="white"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="22" fill="#ffaadd" letter-spacing="4">SILK</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#fff" letter-spacing="2">CINDY MOON #1</text></svg>`,
+
+            'spham': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0800"/><circle cx="100" cy="100" r="55" fill="#FFD700" opacity="0.9"/><circle cx="100" cy="100" r="42" fill="#ff8c00"/><ellipse cx="82" cy="88" rx="12" ry="10" fill="white"/><ellipse cx="118" cy="88" rx="12" ry="10" fill="white"/><ellipse cx="82" cy="90" rx="7" ry="7" fill="#000"/><ellipse cx="118" cy="90" rx="7" ry="7" fill="#000"/><path d="M78,115 Q100,132 122,115" stroke="#000" stroke-width="3" fill="none"/><ellipse cx="100" cy="145" rx="8" ry="5" fill="#ffaa00" opacity="0.6"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#FFD700" letter-spacing="2">SPIDER-HAM</text><text x="100" y="238" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#fff">PETER PORKER</text></svg>`,
+
+            'spnoir': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#080808"/><rect x="0" y="0" width="200" height="300" fill="rgba(20,20,20,0.8)"/>${[...Array(5)].map((_, i) => `<line x1="0" y1="${50 + i * 40}" x2="200" y2="${50 + i * 40}" stroke="rgba(255,255,255,0.03)" stroke-width="8"/>`).join('')}<ellipse cx="100" cy="110" rx="35" ry="44" fill="#111" stroke="#555" stroke-width="2"/><ellipse cx="83" cy="97" rx="13" ry="9" fill="#333"/><ellipse cx="117" cy="97" rx="13" ry="9" fill="#333"/><ellipse cx="83" cy="97" rx="7" ry="5" fill="#666"/><ellipse cx="117" cy="97" rx="7" ry="5" fill="#666"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#aaa" letter-spacing="3">SPIDER-MAN</text><text x="100" y="238" text-anchor="middle" font-family="Bangers,cursive" font-size="16" fill="#fff" letter-spacing="4">NOIR</text><text x="100" y="265" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#555">1930s NEW YORK</text></svg>`,
+
+            'gwenghost': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#0d0d20"/><circle cx="100" cy="100" r="55" fill="none" stroke="rgba(200,200,255,0.2)" stroke-width="1"/><circle cx="100" cy="100" r="35" fill="none" stroke="rgba(200,200,255,0.15)" stroke-width="1"/><ellipse cx="100" cy="100" rx="22" ry="30" fill="#1a1a3a" stroke="rgba(200,200,255,0.5)" stroke-width="1.5"/><ellipse cx="88" cy="90" rx="9" ry="6" fill="white" opacity="0.9"/><ellipse cx="112" cy="90" rx="9" ry="6" fill="white" opacity="0.9"/><text x="100" y="205" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#ccccff" letter-spacing="2">GHOST-SPIDER</text><text x="100" y="228" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="1">#1</text></svg>`,
+
+            // ── OTHER HEROES ──
+            'scarletsp': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#200010"/><polygon points="100,20 160,60 160,140 100,180 40,140 40,60" fill="none" stroke="#E8001C" stroke-width="2" opacity="0.5"/><polygon points="100,40 145,68 145,132 100,160 55,132 55,68" fill="none" stroke="#E8001C" stroke-width="1" opacity="0.3"/><circle cx="100" cy="100" r="30" fill="#E8001C" opacity="0.8"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#E8001C" letter-spacing="2">SCARLET</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#fff" letter-spacing="2">SPIDER #1</text><text x="100" y="265" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">BEN REILLY</text></svg>`,
+
+            'ben1': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#150000"/><line x1="0" y1="80" x2="200" y2="80" stroke="#333" stroke-width="1"/><line x1="0" y1="200" x2="200" y2="200" stroke="#333" stroke-width="1"/><rect x="30" y="80" width="140" height="120" fill="#1a0000"/><circle cx="100" cy="140" r="28" fill="#E8001C" opacity="0.5"/><line x1="30" y1="80" x2="170" y2="80" stroke="#E8001C" stroke-width="2"/><text x="100" y="230" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">THE LOST</text><text x="100" y="252" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">YEARS</text></svg>`,
+
+            'spwoman': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0020"/><circle cx="100" cy="100" r="55" fill="none" stroke="#9b30ff" stroke-width="2" opacity="0.5"/><circle cx="100" cy="100" r="35" fill="none" stroke="#E8001C" stroke-width="1.5" opacity="0.5"/><polygon points="100,50 120,90 165,90 130,115 143,160 100,135 57,160 70,115 35,90 80,90" fill="#E8001C" opacity="0.7"/><text x="100" y="220" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#9b30ff" letter-spacing="2">SPIDER</text><text x="100" y="242" text-anchor="middle" font-family="Bangers,cursive" font-size="15" fill="#fff" letter-spacing="2">WOMAN #1</text><text x="100" y="265" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">JESSICA DREW</text></svg>`,
+
+            'superioram': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#001520"/><circle cx="100" cy="100" r="55" fill="#001a28" stroke="#00aaff" stroke-width="2" opacity="0.7"/><ellipse cx="82" cy="88" rx="14" ry="10" fill="#00ccff" opacity="0.8"/><ellipse cx="118" cy="88" rx="14" ry="10" fill="#00ccff" opacity="0.8"/><ellipse cx="82" cy="88" rx="8" ry="6" fill="white"/><ellipse cx="118" cy="88" rx="8" ry="6" fill="white"/><path d="M75,120 Q100,108 125,120" stroke="#00aaff" stroke-width="2" fill="none"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#00aaff" letter-spacing="2">SUPERIOR</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">SPIDER-MAN #1</text><text x="100" y="265" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">OTTO OCTAVIUS</text></svg>`,
+
+            'spgirlam': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0800"/>${[...Array(5)].map((_, i) => `<circle cx="${40 + i * 30}" cy="${80 + i * 10}" r="${3 + i}" fill="rgba(232,0,28,0.3)"/>`).join('')}<polygon points="100,45 118,82 158,82 127,106 138,143 100,120 62,143 73,106 42,82 82,82" fill="#E8001C" opacity="0.85"/><ellipse cx="100" cy="100" rx="22" ry="28" fill="transparent"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="16" fill="#FFD700" letter-spacing="3">SPIDER</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="15" fill="#fff" letter-spacing="2">GIRL #1</text><text x="100" y="265" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">MAY MAYDAY PARKER</text></svg>`,
+
+            'symbiokng': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#000510"/><ellipse cx="100" cy="120" rx="70" ry="90" fill="#050510"/><ellipse cx="72" cy="98" rx="24" ry="18" fill="white"/><ellipse cx="128" cy="98" rx="24" ry="18" fill="white"/><ellipse cx="72" cy="98" rx="15" ry="12" fill="#111"/><ellipse cx="128" cy="98" rx="15" ry="12" fill="#111"/><path d="M55,148 Q100,178 145,148 L145,160 Q100,195 55,160Z" fill="white"/><path d="M65,155 Q100,183 135,155" stroke="#E8001C" stroke-width="2" fill="none"/><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="18" fill="#fff" letter-spacing="3">VENOM</text><text x="100" y="262" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#aaa">#1 · 2018 · DONNY CATES</text></svg>`,
+
+            'asm2018': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0000"/><circle cx="100" cy="100" r="60" fill="none" stroke="rgba(232,0,28,0.3)" stroke-width="1"/><circle cx="100" cy="100" r="45" fill="none" stroke="rgba(232,0,28,0.2)" stroke-width="1"/><circle cx="100" cy="100" r="30" fill="none" stroke="rgba(232,0,28,0.2)" stroke-width="1"/><ellipse cx="100" cy="100" rx="25" ry="32" fill="#E8001C"/><ellipse cx="88" cy="89" rx="10" ry="7" fill="white"/><ellipse cx="112" cy="89" rx="10" ry="7" fill="white"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">AMAZING SM</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="1">2018 SERIES</text><text x="100" y="265" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">NICK SPENCER RUN</text></svg>`,
+
+            // ── NEW ADDITIONS ──
+            'reign2': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0808"/><rect x="0" y="0" width="200" height="300" fill="rgba(80,0,0,0.3)"/><polygon points="100,20 190,80 190,220 100,280 10,220 10,80" fill="none" stroke="#E8001C" stroke-width="2" opacity="0.4"/><polygon points="100,45 165,85 165,215 100,255 35,215 35,85" fill="none" stroke="#E8001C" stroke-width="1" opacity="0.2"/><circle cx="100" cy="140" r="40" fill="#1a0000" stroke="#E8001C" stroke-width="2"/><ellipse cx="85" cy="128" rx="12" ry="9" fill="#aaa"/><ellipse cx="115" cy="128" rx="12" ry="9" fill="#aaa"/><path d="M75,155 Q100,175 125,155" stroke="#E8001C" stroke-width="2" fill="none"/><text x="100" y="40" text-anchor="middle" font-family="Bangers,cursive" font-size="16" fill="#E8001C" letter-spacing="3">REIGN 2</text><text x="100" y="270" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#aaa" letter-spacing="2">OLD MAN PETER</text></svg>`,
+
+            'symbiote2099': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#000d20"/>${[...Array(6)].map((_, i) => `<rect x="${10 + i * 32}" y="${200 - i * 15}" width="22" height="${100 + i * 15}" fill="rgba(21,101,192,0.25)"/>`).join('')}<circle cx="100" cy="110" r="50" fill="#050520" stroke="#1565C0" stroke-width="1.5" opacity="0.7"/><ellipse cx="80" cy="95" rx="18" ry="13" fill="white" opacity="0.9"/><ellipse cx="120" cy="95" rx="18" ry="13" fill="white" opacity="0.9"/><ellipse cx="80" cy="95" rx="11" ry="9" fill="#000"/><ellipse cx="120" cy="95" rx="11" ry="9" fill="#000"/><path d="M65,135 Q100,160 135,135 L140,145 Q100,175 60,145Z" fill="#1565C0" opacity="0.8"/><text x="100" y="228" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#1565C0" letter-spacing="2">SYMBIOTE SM</text><text x="100" y="250" text-anchor="middle" font-family="Bangers,cursive" font-size="16" fill="#FFD700" letter-spacing="3">2099</text></svg>`,
+
+            'asmannual': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0500"/><rect x="10" y="10" width="180" height="280" fill="none" stroke="#E8001C" stroke-width="3" rx="4"/><rect x="20" y="20" width="160" height="260" fill="none" stroke="#FFD700" stroke-width="1" rx="2"/><polygon points="100,50 120,95 168,95 130,122 145,168 100,142 55,168 70,122 32,95 80,95" fill="#FFD700" opacity="0.8"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#E8001C" letter-spacing="3">AMAZING SM</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="15" fill="#FFD700" letter-spacing="2">ANNUAL</text></svg>`,
+
+            'asmfacsimile': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#f5e6c8"/><rect x="0" y="0" width="200" height="50" fill="#E8001C"/><text x="100" y="35" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#FFD700" letter-spacing="2">AMAZING SPIDER-MAN</text><rect x="0" y="50" width="200" height="200" fill="#e8d5a0"/><circle cx="100" cy="150" r="60" fill="#c8b870" opacity="0.5"/><circle cx="100" cy="150" r="40" fill="#b8a060" opacity="0.5"/><text x="100" y="160" text-anchor="middle" font-family="Bangers,cursive" font-size="16" fill="#5a3000" opacity="0.7">FACSIMILE</text><rect x="0" y="250" width="200" height="50" fill="#333"/><text x="100" y="280" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#FFD700" letter-spacing="2">COLLECTOR'S EDITION</text></svg>`,
+
+            'ultimatesm2024': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ug${c.id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00081a"/><stop offset="100%" stop-color="#001a40"/></linearGradient></defs><rect width="200" height="300" fill="url(#ug${c.id})"/><line x1="0" y1="0" x2="200" y2="300" stroke="rgba(21,101,192,0.2)" stroke-width="30"/><circle cx="100" cy="110" r="55" fill="none" stroke="#1565C0" stroke-width="3"/><circle cx="100" cy="110" r="40" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.5"/><ellipse cx="100" cy="110" rx="24" ry="30" fill="#001a40" stroke="#1565C0" stroke-width="2"/><ellipse cx="88" cy="99" rx="10" ry="7" fill="white"/><ellipse cx="112" cy="99" rx="10" ry="7" fill="white"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#aaa" letter-spacing="2">ULTIMATE</text><text x="100" y="238" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#FFD700" letter-spacing="2">SPIDER-MAN</text><text x="100" y="260" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#1565C0" letter-spacing="2">2024</text></svg>`,
+
+            'giantsize': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a0a00"/><rect x="0" y="0" width="200" height="300" fill="none" stroke="#FFD700" stroke-width="6"/><text x="100" y="30" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#E8001C" letter-spacing="2">GIANT-SIZE</text><polygon points="100,50 128,108 192,108 140,145 160,203 100,166 40,203 60,145 8,108 72,108" fill="#E8001C" opacity="0.8"/><circle cx="100" cy="128" r="28" fill="#1a0000"/><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="16" fill="#FFD700" letter-spacing="3">SPIDER</text><text x="100" y="263" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">MAN</text></svg>`,
+
+            'deathspiral': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#050510"/><path d="M100,150 Q150,100 100,50 Q50,100 100,150 Q150,200 100,250 Q50,200 100,150" stroke="#fff" stroke-width="2" fill="none" opacity="0.4"/><path d="M100,150 Q140,110 100,70 Q60,110 100,150 Q140,190 100,230 Q60,190 100,150" stroke="#E8001C" stroke-width="1.5" fill="none" opacity="0.6"/><circle cx="100" cy="110" r="22" fill="#E8001C" opacity="0.8"/><circle cx="100" cy="190" r="18" fill="#050510" stroke="#fff" stroke-width="2" opacity="0.6"/><text x="100" y="232" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#fff" letter-spacing="1">SM / VENOM</text><text x="100" y="252" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#E8001C" letter-spacing="2">DEATH SPIRAL</text></svg>`,
+
+            'spectbnd': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#001010"/><circle cx="100" cy="110" r="60" fill="none" stroke="#00aaaa" stroke-width="1.5" opacity="0.4"/><circle cx="100" cy="110" r="40" fill="none" stroke="#00aaaa" stroke-width="1" opacity="0.3"/><ellipse cx="100" cy="110" rx="25" ry="32" fill="#002020" stroke="#00cccc" stroke-width="2"/><ellipse cx="87" cy="99" rx="10" ry="7" fill="white"/><ellipse cx="113" cy="99" rx="10" ry="7" fill="white"/><path d="M82,130 Q100,143 118,130" stroke="#00cccc" stroke-width="2" fill="none"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#00cccc" letter-spacing="2">SPECTACULAR SM</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">BRAND NEW DAY</text></svg>`,
+
+            'sin16': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#150010"/>${[...Array(16)].map((_, i) => { const a = (i / 16) * Math.PI * 2, x = 100 + 55 * Math.cos(a), y = 115 + 55 * Math.sin(a); return `<circle cx="${x}" cy="${y}" r="8" fill="rgba(232,0,28,0.5)" stroke="rgba(255,200,0,0.4)" stroke-width="1"/>`; }).join('')}<circle cx="100" cy="115" r="28" fill="#E8001C"/><ellipse cx="89" cy="107" rx="9" ry="6" fill="white"/><ellipse cx="111" cy="107" rx="9" ry="6" fill="white"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#FFD700" letter-spacing="1">SINISTER SIXTEEN</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#fff" letter-spacing="1">SM VS ALL</text></svg>`,
+
+            'spideyfriends': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#001a00"/><circle cx="70" cy="110" r="32" fill="#E8001C" opacity="0.85"/><ellipse cx="61" cy="101" rx="10" ry="7" fill="white"/><ellipse cx="79" cy="101" rx="10" ry="7" fill="white"/><circle cx="130" cy="110" r="28" fill="#1a1a3a" stroke="#fff" stroke-width="1.5" opacity="0.9"/><ellipse cx="121" cy="101" rx="10" ry="7" fill="white"/><ellipse cx="139" cy="101" rx="10" ry="7" fill="white"/><circle cx="100" cy="80" r="20" fill="#FFD700" opacity="0.8"/><ellipse cx="93" cy="74" rx="7" ry="5" fill="white"/><ellipse cx="107" cy="74" rx="7" ry="5" fill="white"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#FFD700" letter-spacing="1">SPIDEY &amp; AMAZING</text><text x="100" y="237" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#fff" letter-spacing="1">FRIENDS 2026</text></svg>`,
+
+            'longywayhome': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="road${c.id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a0a1a"/><stop offset="100%" stop-color="#1a0a0a"/></linearGradient></defs><rect width="200" height="300" fill="url(#road${c.id})"/><path d="M100,300 Q100,200 60,150 Q20,100 80,50" stroke="rgba(255,200,0,0.3)" stroke-width="3" fill="none" stroke-dasharray="10,6"/><path d="M100,300 Q100,200 140,150 Q180,100 120,50" stroke="rgba(255,200,0,0.3)" stroke-width="3" fill="none" stroke-dasharray="10,6"/><circle cx="100" cy="110" r="28" fill="#E8001C" opacity="0.8"/><ellipse cx="89" cy="101" rx="9" ry="6" fill="white"/><ellipse cx="111" cy="101" rx="9" ry="6" fill="white"/><text x="100" y="220" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#FFD700" letter-spacing="2">LONG WAY</text><text x="100" y="242" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">HOME</text></svg>`,
+
+            'homeroomheroes': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#001500"/><rect x="20" y="50" width="160" height="100" fill="#003300" rx="3"/><rect x="20" y="50" width="160" height="10" fill="#004400"/><rect x="30" y="70" width="60" height="40" fill="#002200"/><rect x="110" y="70" width="60" height="40" fill="#002200"/><rect x="80" y="60" width="40" height="90" fill="#001500"/><circle cx="100" cy="160" r="22" fill="#E8001C" opacity="0.85"/><ellipse cx="91" cy="152" rx="8" ry="6" fill="white"/><ellipse cx="109" cy="152" rx="8" ry="6" fill="white"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#00cc00" letter-spacing="2">HOMEROOM</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">HEROES</text></svg>`,
+
+            'websm': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#0a0015"/>${[...Array(8)].map((_, i) => `<line x1="100" y1="60" x2="${10 + i * 26}" y2="${200}" stroke="rgba(200,150,255,0.2)" stroke-width="1"/>`).join('')}${[1, 2, 3, 4].map(r => `<circle cx="100" cy="60" r="${r * 28}" fill="none" stroke="rgba(200,150,255,0.1)" stroke-width="1"/>`).join('')}<circle cx="100" cy="110" r="28" fill="#4a0080" stroke="#9b30ff" stroke-width="2"/><ellipse cx="89" cy="101" rx="10" ry="7" fill="white"/><ellipse cx="111" cy="101" rx="10" ry="7" fill="white"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#9b30ff" letter-spacing="2">WEB OF</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#fff" letter-spacing="2">SPIDER-MAN</text></svg>`,
+
+            'symbiepred': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#050510"/><polygon points="100,20 160,80 160,200 100,260 40,200 40,80" fill="none" stroke="rgba(0,200,255,0.3)" stroke-width="1.5"/><ellipse cx="100" cy="120" rx="45" ry="55" fill="#08080f" stroke="rgba(0,200,255,0.4)" stroke-width="2"/><ellipse cx="78" cy="103" rx="18" ry="13" fill="white" opacity="0.9"/><ellipse cx="122" cy="103" rx="18" ry="13" fill="white" opacity="0.9"/><ellipse cx="78" cy="103" rx="11" ry="9" fill="#000"/><ellipse cx="122" cy="103" rx="11" ry="9" fill="#000"/><path d="M65,148 Q100,168 135,148 L140,158 Q100,185 60,158Z" fill="white"/><text x="100" y="232" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#00ccff" letter-spacing="1">SYMBIE PREDATOR</text><text x="100" y="252" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#fff" letter-spacing="1">VS SPIDER-MAN</text></svg>`,
+
+            'amazingdc': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#000a1a"/><rect x="0" y="0" width="100" height="300" fill="rgba(232,0,28,0.08)"/><rect x="100" y="0" width="100" height="300" fill="rgba(0,0,200,0.08)"/><line x1="100" y1="0" x2="100" y2="300" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="8,4"/><circle cx="60" cy="110" r="30" fill="#E8001C" opacity="0.85"/><ellipse cx="51" cy="101" rx="10" ry="7" fill="white"/><ellipse cx="69" cy="101" rx="10" ry="7" fill="white"/><polygon points="140,80 155,115 190,115 163,135 173,170 140,148 107,170 117,135 90,115 125,115" fill="#FFD700" opacity="0.8"/><text x="100" y="220" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#E8001C" letter-spacing="1">MARVEL</text><text x="100" y="237" text-anchor="middle" font-family="Bangers,cursive" font-size="9" fill="#aaa">MEETS</text><text x="100" y="254" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#6699ff" letter-spacing="1">DC COMICS</text><text x="100" y="278" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#fff">SM / SUPERMAN</text></svg>`,
+
+            'ultsmfacsimile': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#00001a"/><rect x="0" y="0" width="200" height="300" fill="none" stroke="#1565C0" stroke-width="4"/><rect x="8" y="8" width="184" height="284" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.4"/><circle cx="100" cy="110" r="50" fill="none" stroke="#1565C0" stroke-width="1.5" opacity="0.5"/><ellipse cx="100" cy="110" rx="24" ry="30" fill="#00001a" stroke="#1565C0" stroke-width="2"/><ellipse cx="88" cy="99" rx="10" ry="7" fill="white"/><ellipse cx="112" cy="99" rx="10" ry="7" fill="white"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#1565C0" letter-spacing="2">ULTIMATE</text><text x="100" y="237" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#FFD700" letter-spacing="2">FACSIMILE ED.</text><text x="100" y="260" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">BENDIS · BAGLEY</text></svg>`,
+
+            'astonmiles': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#00001a"/><polygon points="100,10 200,100 160,250 40,250 0,100" fill="none" stroke="#E8001C" stroke-width="1.5" opacity="0.3"/><polygon points="100,30 180,110 148,240 52,240 20,110" fill="none" stroke="#1565C0" stroke-width="1" opacity="0.2"/><circle cx="100" cy="120" r="45" fill="none" stroke="#E8001C" stroke-width="2" opacity="0.6"/><ellipse cx="100" cy="120" rx="22" ry="28" fill="#00001a" stroke="#E8001C" stroke-width="2"/><ellipse cx="88" cy="109" rx="9" ry="6" fill="white"/><ellipse cx="112" cy="109" rx="9" ry="6" fill="white"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#E8001C" letter-spacing="2">ASTONISHING</text><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">MILES MORALES</text></svg>`,
+
+            'artofthwip': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#00000d"/>${[...Array(7)].map((_, i) => `<rect x="${8 + i * 26}" y="${20 + i * 15}" width="20" height="30" fill="rgba(${[232, 21, 255, 150, 21, 232, 100][i]},${[0, 101, 0, 0, 101, 0, 100][i]},${[28, 192, 200, 0, 192, 28, 200][i]},0.6)" rx="2" transform="rotate(${-15 + i * 5},${18 + i * 26},${35 + i * 15})"/>`).join('')}<circle cx="100" cy="140" r="35" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.8"/><circle cx="100" cy="140" r="20" fill="#111"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa" letter-spacing="2">MILES MORALES</text><text x="100" y="238" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">ART OF THWIP</text></svg>`,
+
+            'blacksuitblood': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#050505"/><circle cx="100" cy="115" r="70" fill="#0a0a0a"/><ellipse cx="75" cy="96" rx="24" ry="17" fill="white"/><ellipse cx="125" cy="96" rx="24" ry="17" fill="white"/><ellipse cx="75" cy="96" rx="16" ry="12" fill="#111"/><ellipse cx="125" cy="96" rx="16" ry="12" fill="#111"/><path d="M58,148 Q100,178 142,148 L148,160 Q100,195 52,160Z" fill="white"/><path d="M68,160 Q100,182 132,160" stroke="#E8001C" stroke-width="3" fill="none"/><text x="100" y="228" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#aaa" letter-spacing="2">BLACK SUIT</text><text x="100" y="250" text-anchor="middle" font-family="Bangers,cursive" font-size="14" fill="#E8001C" letter-spacing="2">&amp; BLOOD</text></svg>`,
+
+            'asmfacs2024': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#150800"/><rect x="0" y="0" width="200" height="40" fill="#E8001C"/><text x="100" y="27" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="2">FACSIMILE 2024</text><rect x="15" y="55" width="170" height="180" fill="#1a0a00" rx="3"/><circle cx="100" cy="145" r="55" fill="#100500"/><polygon points="100,105 116,138 152,138 124,158 134,193 100,173 66,193 76,158 48,138 84,138" fill="#E8001C" opacity="0.7"/><rect x="0" y="250" width="200" height="50" fill="#111"/><text x="100" y="280" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#aaa" letter-spacing="2">LANDMARK REPRINTS</text></svg>`,
+
+            'spwolverine': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#0f0800"/><rect x="0" y="0" width="200" height="300" fill="rgba(255,200,0,0.04)"/><circle cx="65" cy="120" r="38" fill="#E8001C" opacity="0.85"/><ellipse cx="55" cy="110" rx="12" ry="8" fill="white"/><ellipse cx="75" cy="110" rx="12" ry="8" fill="white"/><circle cx="135" cy="120" r="35" fill="#FFD700" opacity="0.2" stroke="#FFD700" stroke-width="2"/><line x1="120" y1="100" x2="115" y2="85" stroke="#aaa" stroke-width="3" stroke-linecap="round"/><line x1="135" y1="95" x2="135" y2="78" stroke="#aaa" stroke-width="3" stroke-linecap="round"/><line x1="150" y1="100" x2="155" y2="85" stroke="#aaa" stroke-width="3" stroke-linecap="round"/><line x1="100" y1="0" x2="100" y2="300" stroke="rgba(255,255,255,0.06)" stroke-width="30"/><text x="100" y="218" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#E8001C" letter-spacing="1">SPIDER-MAN</text><text x="100" y="237" text-anchor="middle" font-family="Bangers,cursive" font-size="9" fill="#aaa">&amp;</text><text x="100" y="256" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#FFD700" letter-spacing="1">WOLVERINE</text></svg>`,
+
+            'spnoirv2': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#080808"/>${[...Array(12)].map((_, i) => `<line x1="0" y1="${i * 25}" x2="200" y2="${i * 25}" stroke="rgba(255,255,255,0.02)" stroke-width="6"/>`).join('')}<rect x="30" y="40" width="140" height="180" fill="#0f0f0f"/><circle cx="100" cy="130" r="45" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/><ellipse cx="82" cy="118" rx="14" ry="10" fill="#333"/><ellipse cx="118" cy="118" rx="14" ry="10" fill="#333"/><ellipse cx="82" cy="118" rx="8" ry="6" fill="#666"/><ellipse cx="118" cy="118" rx="8" ry="6" fill="#666"/><rect x="55" y="60" width="90" height="5" fill="#444"/><text x="100" y="240" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#888" letter-spacing="3">NOIR</text><text x="100" y="262" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#555">NEW SERIES · 1930s</text></svg>`,
+
+            'goofysm': (c) => `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="#1a1000"/><circle cx="100" cy="100" r="55" fill="#E8001C" opacity="0.9"/><ellipse cx="78" cy="85" rx="16" ry="12" fill="white"/><ellipse cx="122" cy="85" rx="16" ry="12" fill="white"/><ellipse cx="78" cy="87" rx="10" ry="9" fill="#000"/><ellipse cx="122" cy="87" rx="10" ry="9" fill="#000"/><ellipse cx="100" cy="108" rx="18" ry="8" fill="#cc0000"/><path d="M82,116 Q100,132 118,116" stroke="white" stroke-width="2.5" fill="none"/><ellipse cx="85" cy="65" rx="6" ry="10" fill="#E8001C" transform="rotate(-20,85,65)"/><ellipse cx="115" cy="65" rx="6" ry="10" fill="#E8001C" transform="rotate(20,115,65)"/><text x="100" y="212" text-anchor="middle" font-family="Bangers,cursive" font-size="11" fill="#FFD700" letter-spacing="1">WHAT IF GOOFY</text><text x="100" y="232" text-anchor="middle" font-family="Bangers,cursive" font-size="12" fill="#fff" letter-spacing="1">BECAME SPIDER-MAN</text><text x="100" y="260" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#aaa">A-HYUCK!</text></svg>`,
+        };
+
+        function svgFallback(comic) {
+            const designer = SVG_DESIGNS[comic.id];
+            if (designer) return designer(comic);
+            // Generic fallback for any future comics
+            const hue = Math.abs(comic.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0)) % 360;
+            return `<svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="300" fill="${comic.svgBg || '#111'}"/><circle cx="100" cy="110" r="55" fill="none" stroke="hsl(${hue},70%,40%)" stroke-width="2" opacity="0.5"/><ellipse cx="100" cy="110" rx="25" ry="32" fill="${comic.svgBg || '#111'}" stroke="hsl(${hue},70%,50%)" stroke-width="2"/><ellipse cx="87" cy="99" rx="10" ry="7" fill="white"/><ellipse cx="113" cy="99" rx="10" ry="7" fill="white"/><text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="13" fill="#FFD700" letter-spacing="1">${comic.svgText.substring(0, 22)}</text></svg>`;
+        }
+
+        function buildCard(comic) {
+            const ratingStars = '★'.repeat(comic.defaultRating) + '☆'.repeat(5 - comic.defaultRating);
+            const imgTag = comic.img ? `<img class="cover-img" src="${comic.img}" alt="${comic.title}" onerror="this.style.display='none'">` : '';
+            const safeTitle = comic.title.replace(/'/g, "\\'");
+            return `
+  <div class="col-6 col-sm-4 col-md-3" data-category="${comic.cat}" data-id="${comic.id}" style="min-height:420px;">
+    <div class="comic-card-wrapper" id="wrapper-${comic.id}" onclick="flipCard('${comic.id}')">
+      <div class="comic-card-inner">
+
+        <!-- FRONT -->
+        <div class="comic-card" id="card-${comic.id}" style="height:100%;">
+          <div class="comic-cover-placeholder" style="background:${comic.svgBg || '#111'};">
+            ${imgTag}
+            ${svgFallback(comic)}
+            <div class="comic-overlay">
+              <div class="overlay-actions">
+                <button class="overlay-btn wishlist-btn" onclick="toggleWishlist(event,'${comic.id}','${safeTitle}')">♥ Wishlist</button>
+                <button class="overlay-btn done-btn" onclick="toggleDone(event,'${comic.id}','${safeTitle}')">✓ Read</button>
+              </div>
+              <div class="star-row" data-id="${comic.id}">
+                <span class="star" onclick="rateComic(event,'${comic.id}',1)">★</span>
+                <span class="star" onclick="rateComic(event,'${comic.id}',2)">★</span>
+                <span class="star" onclick="rateComic(event,'${comic.id}',3)">★</span>
+                <span class="star" onclick="rateComic(event,'${comic.id}',4)">★</span>
+                <span class="star" onclick="rateComic(event,'${comic.id}',5)">★</span>
+              </div>
+            </div>
+          </div>
+          <div class="comic-badge ${comic.badgeCls}">${comic.badge}</div>
+          <div class="wishlist-badge" id="wish-${comic.id}">♥</div>
+          <div class="done-badge" id="done-${comic.id}">✓</div>
+          <div class="comic-info">
+            <div class="comic-title">${comic.title}</div>
+            <div class="comic-desc">${comic.desc}</div>
+            <div class="comic-rating-display">
+              <span id="disp-${comic.id}">${ratingStars}</span>
+              <span id="dispval-${comic.id}">${comic.defaultRating}.0</span>
+            </div>
+          </div>
+          <div class="flip-hint">tap to flip ↩</div>
+        </div>
+
+        <!-- BACK (Flashcard) -->
+        <div class="comic-card-back">
+          <div class="back-issue">${comic.badge} · ${comic.cat.toUpperCase()}</div>
+          <div class="back-title">${comic.title}</div>
+          <div class="back-divider"></div>
+          <div class="back-desc">${comic.desc}</div>
+          <div class="back-actions">
+            <button class="overlay-btn wishlist-btn" onclick="toggleWishlist(event,'${comic.id}','${safeTitle}')">♥ Wishlist</button>
+            <button class="overlay-btn done-btn" onclick="toggleDone(event,'${comic.id}','${safeTitle}')">✓ Read</button>
+          </div>
+          <div class="star-row" data-id="${comic.id}-back">
+            <span class="star" onclick="rateComic(event,'${comic.id}',1)">★</span>
+            <span class="star" onclick="rateComic(event,'${comic.id}',2)">★</span>
+            <span class="star" onclick="rateComic(event,'${comic.id}',3)">★</span>
+            <span class="star" onclick="rateComic(event,'${comic.id}',4)">★</span>
+            <span class="star" onclick="rateComic(event,'${comic.id}',5)">★</span>
+          </div>
+          <div class="flip-hint">tap to flip ↩</div>
+        </div>
+
+      </div>
+    </div>
+  </div>`;
+        }
+
+        function flipCard(id) {
+            const wrapper = document.getElementById('wrapper-' + id);
+            if (wrapper) wrapper.classList.toggle('flipped');
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('comicsGrid');
+            grid.innerHTML = COMICS.map(buildCard).join('');
+            document.getElementById('gridCount').innerText = COMICS.length + ' Comics';
+            loadRatings(); updateBadges(); updateWishlistCount();
+            const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.querySelector('.comic-card').classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: .1 });
+            document.querySelectorAll('.comic-card-wrapper').forEach((c, i) => { c.style.transitionDelay = (i * .05) + 's'; observer.observe(c); });
+        }
+
+        function filterComics(category, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cols = document.querySelectorAll('#comicsGrid > [data-category]');
+            let count = 0;
+            const wl = JSON.parse(localStorage.getItem('ws_wishlist') || '[]');
+            const done = JSON.parse(localStorage.getItem('ws_done') || '[]');
+            cols.forEach(col => {
+                const id = col.dataset.id;
+                let show = category === 'all' || col.dataset.category === category;
+                if (category === 'wishlist') show = wl.some(i => i.id === id);
+                if (category === 'done') show = done.some(i => i.id === id);
+                col.style.display = show ? '' : 'none';
+                if (show) { count++; const card = col.querySelector('.comic-card'); if (card) card.classList.add('visible'); }
+            });
+            document.getElementById('gridCount').innerText = count + ' Comic' + (count !== 1 ? 's' : '');
+        }
+
+        function rateComic(e, id, stars) {
+            e.stopPropagation(); e.preventDefault();
+            const ratings = JSON.parse(localStorage.getItem('ws_ratings') || '{}');
+            ratings[id] = stars; localStorage.setItem('ws_ratings', JSON.stringify(ratings));
+            updateStarDisplay(id, stars);
+            const comic = COMICS.find(c => c.id === id);
+            showToast('⭐ Rated ' + stars + '/5 for ' + (comic ? comic.title : id) + '!');
+        }
+        function updateStarDisplay(id, stars) {
+            const row = document.querySelector(`.star-row[data-id="${id}"]`);
+            if (row) row.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('lit', i < stars));
+            const d = document.getElementById('disp-' + id); const dv = document.getElementById('dispval-' + id);
+            if (d) d.textContent = '★'.repeat(stars) + '☆'.repeat(5 - stars);
+            if (dv) dv.textContent = stars + '.0';
+        }
+        function loadRatings() {
+            const ratings = JSON.parse(localStorage.getItem('ws_ratings') || '{}');
+            Object.entries(ratings).forEach(([id, stars]) => updateStarDisplay(id, stars));
+        }
+
+        function toggleWishlist(e, id, name) {
+            e.stopPropagation(); e.preventDefault();
+            const wl = JSON.parse(localStorage.getItem('ws_wishlist') || '[]');
+            const idx = wl.findIndex(i => i.id === id);
+            if (idx > -1) { wl.splice(idx, 1); showToast('💔 Removed from Wishlist'); }
+            else { wl.push({ id, name }); showToast('♥ Added to Wishlist!'); }
+            localStorage.setItem('ws_wishlist', JSON.stringify(wl));
+            updateBadges(); updateWishlistCount();
+        }
+        function toggleDone(e, id, name) {
+            e.stopPropagation(); e.preventDefault();
+            const done = JSON.parse(localStorage.getItem('ws_done') || '[]');
+            const idx = done.findIndex(i => i.id === id);
+            if (idx > -1) { done.splice(idx, 1); showToast('📚 Marked as unread'); }
+            else { done.push({ id, name }); showToast('✅ Marked as Read!'); }
+            localStorage.setItem('ws_done', JSON.stringify(done));
+            updateBadges();
+        }
+        function updateBadges() {
+            const wl = JSON.parse(localStorage.getItem('ws_wishlist') || '[]');
+            const done = JSON.parse(localStorage.getItem('ws_done') || '[]');
+            document.querySelectorAll('.wishlist-badge').forEach(el => { const id = el.id.replace('wish-', ''); el.classList.toggle('show', wl.some(i => i.id === id)); });
+            document.querySelectorAll('.done-badge').forEach(el => { const id = el.id.replace('done-', ''); el.classList.toggle('show', done.some(i => i.id === id)); });
+        }
+        function updateWishlistCount() { const wl = JSON.parse(localStorage.getItem('ws_wishlist') || '[]'); const el = document.getElementById('wishlistCount'); if (el) el.textContent = wl.length; }
+
+        function getInitials(name) { return name.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+        function logout() { localStorage.removeItem('wsreviews_user'); showToast('See you around, hero!'); setTimeout(() => window.location.reload(), 1000); }
+        function renderAccount() {
+            const raw = localStorage.getItem('wsreviews_user'); const widget = document.getElementById('accountWidget'); const navAuthBtn = document.getElementById('navAuthBtn'); const wb = document.getElementById('welcomeBanner');
+            if (!raw) { widget.innerHTML = `<a href="login.html" class="login-link-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Login</a>`; return; }
+            const user = JSON.parse(raw); wb.style.display = 'block'; document.getElementById('welcomeName').innerText = user.name.split(' ')[0]; navAuthBtn.innerText = 'My Account'; const initials = getInitials(user.name);
+            widget.innerHTML = `<div class="account-btn" onclick="toggleDropdown()"><div class="account-avatar">${initials}</div><div class="account-name">${user.name.split(' ')[0]}</div><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" style="opacity:.5;flex-shrink:0;"><path d="M1 3l4 4 4-4"/></svg></div><div class="account-dropdown" id="accountDropdown"><div class="dropdown-email">${user.email}</div><a href="wishlist.html" class="dropdown-item">♥ My Wishlist</a><button class="dropdown-item logout" onclick="logout()">Log Out</button></div>`;
+        }
+        function toggleDropdown() { const dd = document.getElementById('accountDropdown'); if (dd) dd.classList.toggle('open'); }
+        document.addEventListener('click', e => { const dd = document.getElementById('accountDropdown'); const btn = document.querySelector('.account-btn'); if (dd && btn && !btn.contains(e.target) && !dd.contains(e.target)) dd.classList.remove('open'); });
+
+        renderGrid();
+        renderAccount();
+    </script>
+</body>
+
+</html>
