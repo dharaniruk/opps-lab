@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About – Web-Slinger Reviews</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bangers&family=Boogaloo&family=Rajdhani:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --red: #E8001C;
+            --blue: #1565C0;
+            --yellow: #FFD700;
+            --white: #F5F5F5;
+            --black: #0A0A0A;
+            --mid: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, .03) 1px, transparent 1px);
+            background-size: 18px 18px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 36px 20px 20px;
+            background: linear-gradient(180deg, #1a0000 0%, var(--black) 100%);
+            border-bottom: 3px solid var(--red);
+        }
+
+        .logo {
+            font-family: 'Boogaloo', cursive;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            color: var(--red);
+            letter-spacing: 4px;
+            line-height: 1;
+            text-shadow: 4px 4px 0 #000, 0 0 40px rgba(232, 0, 28, .5);
+            animation: flicker 4s infinite alternate;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            95% {
+                opacity: 1
+            }
+
+            96% {
+                opacity: .85
+            }
+
+            97% {
+                opacity: 1
+            }
+
+            98% {
+                opacity: .9
+            }
+
+            100% {
+                opacity: 1
+            }
+        }
+
+        .tagline {
+            font-size: clamp(.7rem, 2vw, 1rem);
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--white);
+            margin-top: 4px;
+            opacity: .7;
+        }
+
+        .account-widget {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            z-index: 50;
+        }
+
+        .account-btn {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: rgba(10, 10, 10, .85);
+            border: 1.5px solid var(--red);
+            padding: 7px 14px 7px 8px;
+            cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all .2s;
+        }
+
+        .account-btn:hover {
+            background: rgba(232, 0, 28, .15);
+            border-color: var(--yellow);
+        }
+
+        .account-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bangers', cursive;
+            font-size: 1rem;
+            color: #fff;
+            border: 1.5px solid var(--yellow);
+            flex-shrink: 0;
+        }
+
+        .account-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--white);
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #111;
+            border: 1.5px solid var(--red);
+            min-width: 170px;
+            display: none;
+            flex-direction: column;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .6);
+            z-index: 200;
+        }
+
+        .account-dropdown.open {
+            display: flex;
+        }
+
+        .dropdown-email {
+            padding: 10px 14px;
+            font-size: .75rem;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, .35);
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-item {
+            padding: 11px 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+            cursor: pointer;
+            transition: background .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .dropdown-item.logout {
+            color: var(--red);
+        }
+
+        .login-link-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(10, 10, 10, .85);
+            border: 1.5px solid rgba(255, 255, 255, .2);
+            padding: 8px 16px;
+            cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all .2s;
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .login-link-btn:hover {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        nav.navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 10, .92) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--blue);
+            padding: 10px 20px;
+        }
+
+        .navbar-nav {
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .nav-btn {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white) !important;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, .15);
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all .2s;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: var(--red) !important;
+            border-color: var(--red);
+            color: #fff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 0, 28, .4);
+        }
+
+        .navbar-toggler {
+            border-color: var(--red);
+            filter: invert(1);
+        }
+
+        .welcome-banner {
+            display: none;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(90deg, rgba(21, 101, 192, .15), rgba(232, 0, 28, .1), rgba(21, 101, 192, .15));
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            padding: 10px 20px;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .5);
+        }
+
+        .welcome-banner span {
+            color: var(--yellow);
+        }
+
+        .wishlist-nav-count {
+            display: inline-block;
+            background: var(--red);
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: .65rem;
+            text-align: center;
+            line-height: 18px;
+            margin-left: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+        }
+
+        /* ABOUT HERO */
+        .about-hero {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 60px 20px 48px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(232, 0, 28, .15) 0%, transparent 65%);
+        }
+
+        .section-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            color: var(--yellow);
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, .5);
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .about-desc {
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            color: rgba(255, 255, 255, .65);
+            max-width: 680px;
+            margin: 0 auto;
+            line-height: 1.8;
+            letter-spacing: .5px;
+        }
+
+        .about-desc strong {
+            color: var(--yellow);
+        }
+
+        /* STATS */
+        .stats-section {
+            position: relative;
+            z-index: 1;
+            background: var(--mid);
+            padding: 48px 20px;
+            border-top: 3px solid #222;
+            border-bottom: 3px solid #222;
+        }
+
+        .stat-box {
+            background: #111;
+            border: 2px solid rgba(255, 255, 255, .06);
+            padding: 28px 20px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+
+        .stat-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-num {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--red);
+            letter-spacing: 3px;
+            line-height: 1;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, .5);
+        }
+
+        .stat-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .4);
+            margin-top: 6px;
+        }
+
+        /* MISSION */
+        .mission-section {
+            position: relative;
+            z-index: 1;
+            padding: 56px 20px;
+        }
+
+        .mission-box {
+            background: #111;
+            border: 2px solid rgba(232, 0, 28, .2);
+            padding: 36px 32px;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .mission-box p {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, .65);
+            line-height: 1.9;
+            letter-spacing: .3px;
+        }
+
+        .mission-box p+p {
+            margin-top: 16px;
+        }
+
+        .mission-box strong {
+            color: var(--yellow);
+        }
+
+        .mission-title {
+            font-family: 'Bangers', cursive;
+            font-size: 2rem;
+            color: var(--red);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        /* CREATOR CARD */
+        .creator-section {
+            position: relative;
+            z-index: 1;
+            padding: 0 20px 64px;
+            text-align: center;
+        }
+
+        .creator-card {
+            background: #111;
+            border: 2px solid rgba(232, 0, 28, .25);
+            padding: 40px 32px;
+            max-width: 480px;
+            margin: 0 auto;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .creator-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(232, 0, 28, .08) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .creator-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--red), var(--blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bangers', cursive;
+            font-size: 2.2rem;
+            color: #fff;
+            margin: 0 auto 20px;
+            border: 3px solid var(--yellow);
+            box-shadow: 0 0 30px rgba(232, 0, 28, .4);
+        }
+
+        .creator-name {
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+            color: var(--yellow);
+            margin-bottom: 4px;
+        }
+
+        .creator-id {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .8rem;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, .35);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .creator-role {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 16px;
+        }
+
+        .creator-bio {
+            font-size: .95rem;
+            color: rgba(255, 255, 255, .55);
+            line-height: 1.7;
+            letter-spacing: .3px;
+        }
+
+        /* CONTACT */
+        .contact-section {
+            position: relative;
+            z-index: 1;
+            background: var(--mid);
+            padding: 56px 20px 64px;
+            border-top: 3px solid #222;
+        }
+
+        .sp-input {
+            width: 100%;
+            background: rgba(255, 255, 255, .05);
+            border: 1.5px solid rgba(255, 255, 255, .1);
+            color: var(--white);
+            padding: 12px 16px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            outline: none;
+            transition: border-color .2s;
+            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+        }
+
+        .sp-input:focus {
+            border-color: var(--blue);
+        }
+
+        .sp-input.error {
+            border-color: var(--red);
+        }
+
+        .sp-textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, .05);
+            border: 1.5px solid rgba(255, 255, 255, .1);
+            color: var(--white);
+            padding: 12px 16px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            outline: none;
+            transition: border-color .2s;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .sp-textarea:focus {
+            border-color: var(--blue);
+        }
+
+        .field-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .5);
+            margin-bottom: 7px;
+        }
+
+        .field-error {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .78rem;
+            color: var(--red);
+            letter-spacing: 1px;
+            display: none;
+            margin-top: 4px;
+        }
+
+        .field-error.show {
+            display: block;
+        }
+
+        .contact-form {
+            background: #111;
+            border: 2px solid rgba(255, 255, 255, .06);
+            padding: 32px;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+        }
+
+        .submit-btn {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            color: #000;
+            background: var(--yellow);
+            border: none;
+            padding: 13px 40px;
+            cursor: pointer;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            transition: all .2s;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--white);
+            box-shadow: 4px 4px 0 var(--red);
+        }
+
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+        }
+
+        footer {
+            background: #050505;
+            border-top: 3px solid var(--red);
+            padding: 28px 20px;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .9rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, .3);
+        }
+
+        footer span {
+            color: var(--red);
+        }
+
+        .toast-custom {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #111;
+            border: 1.5px solid var(--yellow);
+            color: var(--white);
+            padding: 12px 28px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-size: .9rem;
+            opacity: 0;
+            transition: all .3s;
+            z-index: 9999;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast-custom.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="account-widget" id="accountWidget"></div>
+        <div class="logo">Web-Slinger Reviews</div>
+        <div class="tagline">Your #1 Spider-Man Comic Rating Destination</div>
+    </header>
+
+    <nav class="navbar navbar-expand-md">
+        <div class="container-fluid justify-content-center">
+            <button class="navbar-toggler mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="mainNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a href="index.html" class="nav-btn">Home</a></li>
+                    <li class="nav-item"><a href="books.html" class="nav-btn">All Comics</a></li>
+                    <li class="nav-item"><a href="wishlist.html" class="nav-btn">Wishlist <span
+                                class="wishlist-nav-count" id="wishlistCount">0</span></a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-btn active">About</a></li>
+                    <li class="nav-item"><a href="login.html" class="nav-btn" id="navAuthBtn">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="welcome-banner" id="welcomeBanner">Welcome back, <span id="welcomeName">Hero</span>!</div>
+
+    <!-- ABOUT HERO -->
+    <section class="about-hero">
+        <div class="section-label">Our Story</div>
+        <div class="section-title">About Web-Slinger Reviews</div>
+        <p class="about-desc">
+            A passion project born from a love of <strong>Spider-Man</strong> and the belief that every arc, every
+            issue, every variant deserves honest, fan-first coverage. No corporate agendas — just pure spider-love.
+        </p>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row g-3 justify-content-center">
+                <div class="col-6 col-md-3">
+                    <div class="stat-box">
+                        <div class="stat-num">24+</div>
+                        <div class="stat-label">Comics Catalogued</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-box">
+                        <div class="stat-num">60+</div>
+                        <div class="stat-label">Years of Spider-History</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-box">
+                        <div class="stat-num">★ 5</div>
+                        <div class="stat-label">Avg Site Rating</div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-box">
+                        <div class="stat-num">∞</div>
+                        <div class="stat-label">Spider-Verses Covered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MISSION -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="mission-box">
+                <div class="mission-title">Our Mission</div>
+                <p>Web-Slinger Reviews exists to be the <strong>definitive fan-led guide</strong> to Spider-Man comics —
+                    from the very first web shot in Amazing Fantasy #15 all the way to the multiverse-spanning
+                    adventures of today.</p>
+                <p>We believe every Spider-Person has a story worth reading, every arc has something to teach, and every
+                    fan — new or veteran — deserves a space to discover, rate, and celebrate the greatest superhero in
+                    comics.</p>
+                <p><strong>With great power comes great responsibility.</strong> We take that seriously — honest
+                    reviews, no hype, just the real web-slinging truth.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CREATOR -->
+    <section class="creator-section">
+        <div class="container">
+            <div class="text-center mb-4">
+                <div class="section-label">The Person Behind It</div>
+                <div class="section-title" style="margin-bottom:0;">Meet the Creator</div>
+            </div>
+            <div class="creator-card">
+                <div class="creator-avatar">DC</div>
+                <div class="creator-name">Dharani</div>
+                <div class="creator-id">CH.SC.U4CSE25212</div>
+                <div class="creator-role">Founder &amp; Chief Spider-Reviewer</div>
+                <div class="creator-bio">
+                    A lifelong Spider-Man fan who believes that the best stories are the ones that remind us anyone — a
+                    nerdy kid from Queens, a Brooklyn teenager, a ghost from Earth-65 — can be a hero. Built this site
+                    from scratch to create the Spider-Man review hub she always wished existed.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- CONTACT -->
+    <section class="contact-section">
+        <div class="container" style="max-width:600px;">
+            <div class="text-center mb-4">
+                <div class="section-label">Get in Touch</div>
+                <div class="section-title" style="margin-bottom:0;">Contact Us</div>
+            </div>
+            <div class="contact-form">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-sm-6">
+                        <div class="field-label">Your Name *</div>
+                        <input class="sp-input" type="text" id="contactName" placeholder="Peter Parker">
+                        <div class="field-error" id="nameError">⚠ Name is required</div>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <div class="field-label">Email *</div>
+                        <input class="sp-input" type="email" id="contactEmail" placeholder="hero@example.com">
+                        <div class="field-error" id="emailError">⚠ Enter a valid email</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="field-label">Subject</div>
+                    <input class="sp-input" type="text" id="contactSubject"
+                        placeholder="About Amazing Spider-Man #121…">
+                </div>
+                <div class="mb-3">
+                    <div class="field-label">Message *</div>
+                    <textarea class="sp-textarea" id="contactMessage"
+                        placeholder="Share your Spider-thoughts…"></textarea>
+                    <div class="field-error" id="msgError">⚠ Please write a message</div>
+                </div>
+                <button class="submit-btn" onclick="submitContact()">Send Message</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 <span>Web-Slinger Reviews</span> — All Rights Reserved</p>
+    </footer>
+    <div class="toast-custom" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function getInitials(n) { return n.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500); }
+        function logout() { localStorage.removeItem('wsreviews_user'); showToast('See you around, hero!'); setTimeout(() => window.location.reload(), 1000); }
+        function updateWishlistCount() { const wl = JSON.parse(localStorage.getItem('ws_wishlist') || '[]'); const el = document.getElementById('wishlistCount'); if (el) el.textContent = wl.length; }
+
+        function submitContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+            ['contactName', 'contactEmail', 'contactMessage'].forEach(id => document.getElementById(id).classList.remove('error'));
+            ['nameError', 'emailError', 'msgError'].forEach(id => document.getElementById(id).classList.remove('show'));
+            let valid = true;
+            if (!name) { document.getElementById('contactName').classList.add('error'); document.getElementById('nameError').classList.add('show'); valid = false; }
+            const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRe.test(email)) { document.getElementById('contactEmail').classList.add('error'); document.getElementById('emailError').classList.add('show'); valid = false; }
+            if (!message) { document.getElementById('contactMessage').classList.add('error'); document.getElementById('msgError').classList.add('show'); valid = false; }
+            if (!valid) return;
+            showToast("✅ Message sent! We'll swing back to you soon.");
+            document.getElementById('contactName').value = ''; document.getElementById('contactEmail').value = ''; document.getElementById('contactSubject').value = ''; document.getElementById('contactMessage').value = '';
+        }
+
+        const observer = new IntersectionObserver((entries) => { entries.forEach((entry, i) => { if (entry.isIntersecting) { entry.target.style.transitionDelay = (i * .1) + 's'; entry.target.classList.add('visible'); observer.unobserve(entry.target); } }); }, { threshold: .15 });
+        document.querySelectorAll('.stat-box').forEach(el => observer.observe(el));
+
+        function renderAccount() {
+            const raw = localStorage.getItem('wsreviews_user'); const widget = document.getElementById('accountWidget'); const navAuthBtn = document.getElementById('navAuthBtn'); const wb = document.getElementById('welcomeBanner');
+            if (!raw) { widget.innerHTML = `<a href="login.html" class="login-link-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Login</a>`; return; }
+            const user = JSON.parse(raw); wb.style.display = 'block'; document.getElementById('welcomeName').innerText = user.name.split(' ')[0]; navAuthBtn.innerText = 'My Account'; const initials = getInitials(user.name);
+            widget.innerHTML = `<div class="account-btn" onclick="toggleDropdown()"><div class="account-avatar">${initials}</div><div class="account-name">${user.name.split(' ')[0]}</div><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" style="opacity:.5;flex-shrink:0;"><path d="M1 3l4 4 4-4"/></svg></div><div class="account-dropdown" id="accountDropdown"><div class="dropdown-email">${user.email}</div><a href="wishlist.html" class="dropdown-item">♥ My Wishlist</a><button class="dropdown-item logout" onclick="logout()">Log Out</button></div>`;
+        }
+        function toggleDropdown() { const dd = document.getElementById('accountDropdown'); if (dd) dd.classList.toggle('open'); }
+        document.addEventListener('click', e => { const dd = document.getElementById('accountDropdown'); const btn = document.querySelector('.account-btn'); if (dd && btn && !btn.contains(e.target) && !dd.contains(e.target)) dd.classList.remove('open'); });
+
+        renderAccount(); updateWishlistCount();
+    </script>
+</body>
+
+</html>

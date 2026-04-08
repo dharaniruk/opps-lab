@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-Slinger Reviews – Spider-Man Comic Rating Site</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bangers&family=Boogaloo&family=Rajdhani:wght@400;600;700&family=Permanent+Marker&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --red: #E8001C;
+            --blue: #1565C0;
+            --yellow: #FFD700;
+            --white: #F5F5F5;
+            --black: #0A0A0A;
+            --dark: #111;
+            --mid: #1a1a1a;
+            --glow-red: rgba(232, 0, 28, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 18px 18px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* HEADER */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 36px 20px 20px;
+            background: linear-gradient(180deg, #1a0000 0%, var(--black) 100%);
+            border-bottom: 3px solid var(--red);
+        }
+
+        .logo {
+            font-family: 'Boogaloo', cursive;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            color: var(--red);
+            letter-spacing: 4px;
+            line-height: 1;
+            text-shadow: 4px 4px 0 #000, 0 0 40px rgba(232, 0, 28, 0.5);
+            animation: flicker 4s infinite alternate;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            95% {
+                opacity: 1
+            }
+
+            96% {
+                opacity: .85
+            }
+
+            97% {
+                opacity: 1
+            }
+
+            98% {
+                opacity: .9
+            }
+
+            100% {
+                opacity: 1
+            }
+        }
+
+        .tagline {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(0.7rem, 2vw, 1rem);
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--white);
+            margin-top: 4px;
+            opacity: .7;
+        }
+
+        /* ACCOUNT */
+        .account-widget {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            z-index: 50;
+        }
+
+        .account-btn {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: rgba(10, 10, 10, 0.85);
+            border: 1.5px solid var(--red);
+            padding: 7px 14px 7px 8px;
+            cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all .2s;
+        }
+
+        .account-btn:hover {
+            background: rgba(232, 0, 28, .15);
+            border-color: var(--yellow);
+        }
+
+        .account-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bangers', cursive;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: #fff;
+            flex-shrink: 0;
+            border: 1.5px solid var(--yellow);
+        }
+
+        .account-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--white);
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #111;
+            border: 1.5px solid var(--red);
+            min-width: 170px;
+            display: none;
+            flex-direction: column;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .6);
+            z-index: 200;
+        }
+
+        .account-dropdown.open {
+            display: flex;
+        }
+
+        .dropdown-email {
+            padding: 10px 14px;
+            font-size: .75rem;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, .35);
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-item {
+            padding: 11px 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+            cursor: pointer;
+            transition: background .2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .dropdown-item.logout {
+            color: var(--red);
+        }
+
+        .login-link-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(10, 10, 10, .85);
+            border: 1.5px solid rgba(255, 255, 255, .2);
+            padding: 8px 16px;
+            cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all .2s;
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+
+        .login-link-btn:hover {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        /* NAVBAR */
+        nav.navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 10, .92) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--blue);
+            padding: 10px 20px;
+        }
+
+        .navbar-nav {
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .nav-btn {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .95rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--white) !important;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, .15);
+            padding: 8px 20px;
+            cursor: pointer;
+            transition: all .2s;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: var(--red) !important;
+            border-color: var(--red);
+            color: #fff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 0, 28, .4);
+        }
+
+        .navbar-toggler {
+            border-color: var(--red);
+            filter: invert(1);
+        }
+
+        /* WELCOME BANNER */
+        .welcome-banner {
+            display: none;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(90deg, rgba(21, 101, 192, .15), rgba(232, 0, 28, .1), rgba(21, 101, 192, .15));
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            padding: 10px 20px;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .5);
+        }
+
+        .welcome-banner span {
+            color: var(--yellow);
+        }
+
+        /* SEARCH */
+        .search-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 24px 20px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-inner {
+            display: flex;
+            width: 100%;
+            max-width: 520px;
+            border: 2px solid var(--blue);
+            background: var(--mid);
+            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+            overflow: hidden;
+        }
+
+        .search-inner input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 12px 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 1px;
+        }
+
+        .search-inner input::placeholder {
+            color: rgba(255, 255, 255, .35);
+        }
+
+        .search-inner button {
+            background: var(--blue);
+            border: none;
+            padding: 12px 24px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .95rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: background .2s;
+            text-transform: uppercase;
+        }
+
+        .search-inner button:hover {
+            background: #1976D2;
+        }
+
+        .divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+        }
+
+        /* HERO */
+        .hero {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 60px 20px 70px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(21, 101, 192, .2) 0%, transparent 65%), radial-gradient(ellipse at 20% 80%, rgba(232, 0, 28, .12) 0%, transparent 60%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 16px;
+            border: 3px solid rgba(255, 255, 255, .05);
+            pointer-events: none;
+        }
+
+        .hero-img-wrap {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+
+        .hero-svg-cover {
+            width: min(340px, 80vw);
+            display: block;
+            border: 4px solid var(--red);
+            box-shadow: 8px 8px 0 var(--blue), 0 0 60px rgba(232, 0, 28, .3);
+        }
+
+        .hero-badge {
+            position: absolute;
+            top: -18px;
+            right: -18px;
+            background: var(--yellow);
+            color: #000;
+            font-family: 'Bangers', cursive;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #000;
+            box-shadow: 3px 3px 0 #333;
+            transform: rotate(12deg);
+            animation: spin-badge 6s linear infinite;
+        }
+
+        @keyframes spin-badge {
+
+            0%,
+            100% {
+                transform: rotate(12deg) scale(1)
+            }
+
+            50% {
+                transform: rotate(18deg) scale(1.08)
+            }
+        }
+
+        .hero-title {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(2.2rem, 8vw, 5.5rem);
+            color: var(--yellow);
+            letter-spacing: 6px;
+            text-shadow: 3px 3px 0 var(--red), 6px 6px 0 rgba(0, 0, 0, .5);
+            line-height: 1;
+            margin-bottom: 16px;
+            animation: slide-up .7s ease both;
+        }
+
+        .hero-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: clamp(.95rem, 2vw, 1.2rem);
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: rgba(245, 245, 245, .7);
+            max-width: 400px;
+            margin: 0 auto 32px;
+            animation: slide-up .9s ease both;
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(24px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .cta-btn {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            color: #000;
+            background: var(--yellow);
+            border: none;
+            padding: 14px 44px;
+            cursor: pointer;
+            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+            transition: all .2s;
+            box-shadow: 4px 4px 0 var(--red);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-btn:hover {
+            background: var(--white);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--red);
+        }
+
+        /* FEATURED SECTION */
+        .featured {
+            position: relative;
+            z-index: 1;
+            padding: 64px 20px 72px;
+            background: var(--mid);
+            border-top: 3px solid #222;
+        }
+
+        .section-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: .8rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--red);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Bangers', cursive;
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            color: var(--yellow);
+            letter-spacing: 4px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, .5);
+            margin-bottom: 48px;
+            line-height: 1;
+            text-align: center;
+        }
+
+        /* COMIC CARDS */
+        .comic-card {
+            position: relative;
+            background: #111;
+            border: 2px solid rgba(255, 255, 255, .08);
+            cursor: pointer;
+            transition: all .25s ease, opacity .6s ease, transform .6s ease;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .comic-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .comic-card:hover {
+            border-color: var(--red);
+            transform: translateY(-6px) !important;
+            box-shadow: 0 12px 40px rgba(232, 0, 28, .3), 6px 6px 0 var(--blue);
+        }
+
+        .comic-card:hover .comic-overlay {
+            opacity: 1;
+        }
+
+        .comic-cover-placeholder {
+            width: 100%;
+            aspect-ratio: 2/3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+        }
+
+        .cover-svg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+        }
+
+        .comic-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, .9) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 16px;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity .25s;
+        }
+
+        .overlay-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .overlay-btn {
+            font-family: 'Bebas Neue', cursive;
+            font-size: .85rem;
+            letter-spacing: 3px;
+            color: #000;
+            background: var(--yellow);
+            border: none;
+            padding: 7px 16px;
+            cursor: pointer;
+            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+            transition: background .2s;
+        }
+
+        .overlay-btn:hover {
+            background: #fff;
+        }
+
+        .overlay-btn.wishlist-btn {
+            background: rgba(255, 255, 255, .15);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .3);
+        }
+
+        .overlay-btn.wishlist-btn:hover {
+            background: var(--red);
+        }
+
+        .overlay-btn.done-btn {
+            background: rgba(0, 200, 100, .2);
+            color: #0f0;
+            border: 1px solid rgba(0, 200, 100, .4);
+        }
+
+        .overlay-btn.done-btn:hover {
+            background: rgba(0, 200, 100, .5);
+        }
+
+        /* STAR RATING */
+        .star-row {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 4px;
+        }
+
+        .star {
+            font-size: 1rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, .2);
+            transition: color .15s;
+            line-height: 1;
+        }
+
+        .star.lit,
+        .star:hover {
+            color: var(--yellow);
+        }
+
+        .star-row:hover .star {
+            color: var(--yellow);
+        }
+
+        .star-row .star:hover~.star {
+            color: rgba(255, 255, 255, .2);
+        }
+
+        .comic-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-family: 'Bangers', cursive;
+            font-size: .85rem;
+            letter-spacing: 2px;
+            padding: 3px 10px;
+            background: var(--red);
+            color: #fff;
+            clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+            z-index: 5;
+        }
+
+        .comic-badge.new {
+            background: var(--blue);
+        }
+
+        .wishlist-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.1rem;
+            z-index: 6;
+            display: none;
+        }
+
+        .wishlist-badge.show {
+            display: block;
+        }
+
+        .done-badge {
+            position: absolute;
+            top: 32px;
+            right: 10px;
+            font-size: 1.1rem;
+            z-index: 6;
+            display: none;
+        }
+
+        .done-badge.show {
+            display: block;
+        }
+
+        .comic-info {
+            padding: 12px 14px 16px;
+        }
+
+        .comic-title {
+            font-family: 'Bangers', cursive;
+            font-size: 1.25rem;
+            letter-spacing: 2px;
+            color: var(--yellow);
+        }
+
+        .comic-desc {
+            font-size: .82rem;
+            color: rgba(255, 255, 255, .45);
+            letter-spacing: .5px;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .comic-rating-display {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: .8rem;
+            color: var(--yellow);
+            letter-spacing: 1px;
+        }
+
+        .comic-rating-display .stars-static {
+            letter-spacing: 1px;
+        }
+
+        /* VIEW ALL */
+        .view-all-wrap {
+            text-align: center;
+            padding: 32px 20px 48px;
+        }
+
+        .view-all-btn {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            color: #000;
+            background: var(--red);
+            border: none;
+            padding: 14px 44px;
+            cursor: pointer;
+            clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+            transition: all .2s;
+            box-shadow: 4px 4px 0 var(--blue);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .view-all-btn:hover {
+            background: var(--yellow);
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--blue);
+        }
+
+        /* FOOTER */
+        footer {
+            background: #050505;
+            border-top: 3px solid var(--red);
+            padding: 28px 20px;
+            text-align: center;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: .9rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, .3);
+        }
+
+        footer span {
+            color: var(--red);
+        }
+
+        /* TOAST */
+        .toast-custom {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #111;
+            border: 1.5px solid var(--yellow);
+            color: var(--white);
+            padding: 12px 28px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-size: .9rem;
+            opacity: 0;
+            transition: all .3s;
+            z-index: 9999;
+            clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast-custom.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* COVER COLORS */
+        .cover-classic {
+            background: linear-gradient(145deg, #1a0000, #330000);
+        }
+
+        .cover-miles {
+            background: linear-gradient(145deg, #000020, #000060);
+        }
+
+        .cover-gwen {
+            background: linear-gradient(145deg, #0a0a1a, #1a0a2a);
+        }
+
+        .cover-2099 {
+            background: linear-gradient(145deg, #001a33, #0a0020);
+        }
+
+        .cover-noir {
+            background: linear-gradient(145deg, #050505, #111);
+        }
+
+        .cover-silk {
+            background: linear-gradient(145deg, #1a0010, #050005);
+        }
+
+        .cover-symbiote {
+            background: linear-gradient(145deg, #000510, #001020);
+        }
+
+        /* WISHLIST PAGE LINK */
+        .wishlist-nav-count {
+            display: inline-block;
+            background: var(--red);
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: .65rem;
+            text-align: center;
+            line-height: 18px;
+            margin-left: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="account-widget" id="accountWidget"></div>
+        <div class="logo">Web-Slinger Reviews</div>
+        <div class="tagline">Your #1 Spider-Man Comic Rating Destination</div>
+    </header>
+
+    <nav class="navbar navbar-expand-md">
+        <div class="container-fluid justify-content-center">
+            <button class="navbar-toggler mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="mainNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a href="index.html" class="nav-btn active">Home</a></li>
+                    <li class="nav-item"><a href="books.html" class="nav-btn">All Comics</a></li>
+                    <li class="nav-item"><a href="wishlist.html" class="nav-btn">Wishlist <span
+                                class="wishlist-nav-count" id="wishlistCount">0</span></a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-btn">About</a></li>
+                    <li class="nav-item"><a href="login.html" class="nav-btn" id="navAuthBtn">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="welcome-banner" id="welcomeBanner">
+        Welcome back, <span id="welcomeName">Hero</span> — your Spider-Verse awaits!
+    </div>
+
+    <div class="search-wrap">
+        <div class="search-inner">
+            <input type="text" id="searchInput" placeholder="Search Spider-Man comics…">
+            <button onclick="handleSearch()">Search</button>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-img-wrap">
+            <svg class="hero-svg-cover" viewBox="0 0 340 510" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="hg" cx="50%" cy="30%">
+                        <stop offset="0%" stop-color="#3a0000" />
+                        <stop offset="100%" stop-color="#0a0000" />
+                    </radialGradient>
+                </defs>
+                <rect width="340" height="510" fill="url(#hg)" />
+                <rect x="0" y="0" width="340" height="510" fill="none" stroke="rgba(232,0,28,0.3)" stroke-width="8" />
+                <!-- Web lines -->
+                <g stroke="rgba(232,0,28,0.15)" stroke-width="1" fill="none">
+                    <line x1="170" y1="0" x2="0" y2="510" />
+                    <line x1="170" y1="0" x2="340" y2="510" />
+                    <line x1="170" y1="0" x2="0" y2="255" />
+                    <line x1="170" y1="0" x2="340" y2="255" />
+                    <ellipse cx="170" cy="0" rx="80" ry="50" />
+                    <ellipse cx="170" cy="0" rx="160" ry="120" />
+                    <ellipse cx="170" cy="0" rx="240" ry="190" />
+                </g>
+                <!-- Spidey mask shape -->
+                <ellipse cx="170" cy="180" rx="90" ry="100" fill="var(--red,#E8001C)" opacity="0.9" />
+                <ellipse cx="170" cy="180" rx="90" ry="100" fill="none" stroke="#000" stroke-width="3" />
+                <!-- Eyes -->
+                <ellipse cx="140" cy="160" rx="28" ry="18" fill="white" transform="rotate(-10,140,160)" />
+                <ellipse cx="200" cy="160" rx="28" ry="18" fill="white" transform="rotate(10,200,160)" />
+                <ellipse cx="140" cy="161" rx="20" ry="13" fill="#1a1a1a" transform="rotate(-10,140,161)" />
+                <ellipse cx="200" cy="161" rx="20" ry="13" fill="#1a1a1a" transform="rotate(10,200,161)" />
+                <!-- Web pattern on mask -->
+                <g stroke="#000" stroke-width="1.2" fill="none" opacity="0.5">
+                    <line x1="170" y1="80" x2="170" y2="280" />
+                    <line x1="80" y1="130" x2="260" y2="230" />
+                    <line x1="80" y1="230" x2="260" y2="130" />
+                    <ellipse cx="170" cy="180" rx="40" ry="45" />
+                    <ellipse cx="170" cy="180" rx="70" ry="78" />
+                </g>
+                <text x="170" y="360" text-anchor="middle" font-family="Bangers,cursive" font-size="38" fill="#FFD700"
+                    letter-spacing="4">AMAZING</text>
+                <text x="170" y="405" text-anchor="middle" font-family="Bangers,cursive" font-size="32" fill="#E8001C"
+                    letter-spacing="6">SPIDER-MAN</text>
+                <text x="170" y="440" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="14"
+                    fill="rgba(255,255,255,0.5)" letter-spacing="3">REVIEW EDITION</text>
+                <text x="170" y="490" text-anchor="middle" font-family="Bangers,cursive" font-size="18" fill="#FFD700"
+                    letter-spacing="2">★ ★ ★ ★ ★</text>
+            </svg>
+            <div class="hero-badge">NEW</div>
+        </div>
+        <h1 class="hero-title">Rate The Spider-Verse</h1>
+        <p class="hero-sub">Discover, review &amp; track every Spider-Man comic ever made</p>
+        <a href="books.html" class="cta-btn">Explore All Comics</a>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- FEATURED -->
+    <section class="featured">
+        <div class="container">
+            <div class="section-label">Top Rated</div>
+            <div class="section-title">Featured Spider-Man Comics</div>
+
+            <div class="row g-3" id="featuredGrid">
+
+                <!-- Amazing Fantasy #15 -->
+                <div class="col-6 col-sm-4 col-md-3">
+                    <div class="comic-card" data-id="af15">
+                        <div class="comic-cover-placeholder cover-classic">
+                            <img class="cover-img"
+                                src="https://upload.wikimedia.org/wikipedia/en/1/1b/AmazingFantasy15.jpg"
+                                alt="Amazing Fantasy #15" onerror="this.style.display='none'">
+                            <svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"
+                                style="position:absolute;inset:0;z-index:-1">
+                                <rect width="200" height="300" fill="url(#g1af)" />
+                                <defs>
+                                    <radialGradient id="g1af" cx="50%" cy="30%">
+                                        <stop offset="0%" stop-color="#3a0000" />
+                                        <stop offset="100%" stop-color="#0a0000" />
+                                    </radialGradient>
+                                </defs>
+                                <text x="100" y="190" text-anchor="middle" font-family="Bangers,cursive" font-size="16"
+                                    fill="#FFD700" letter-spacing="2">AMAZING FANTASY</text>
+                                <text x="100" y="215" text-anchor="middle" font-family="Bangers,cursive" font-size="28"
+                                    fill="#E8001C" letter-spacing="3">#15</text>
+                            </svg>
+                            <div class="comic-overlay">
+                                <div class="overlay-actions">
+                                    <button class="overlay-btn wishlist-btn"
+                                        onclick="toggleWishlist(event,'af15','Amazing Fantasy #15')">♥ Wishlist</button>
+                                    <button class="overlay-btn done-btn"
+                                        onclick="toggleDone(event,'af15','Amazing Fantasy #15')">✓ Read</button>
+                                </div>
+                                <div class="star-row" data-id="af15">
+                                    <span class="star" onclick="rateComic(event,'af15',1)">★</span>
+                                    <span class="star" onclick="rateComic(event,'af15',2)">★</span>
+                                    <span class="star" onclick="rateComic(event,'af15',3)">★</span>
+                                    <span class="star" onclick="rateComic(event,'af15',4)">★</span>
+                                    <span class="star" onclick="rateComic(event,'af15',5)">★</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comic-badge">ORIGIN</div>
+                        <div class="wishlist-badge" id="wish-af15">♥</div>
+                        <div class="done-badge" id="done-af15">✓</div>
+                        <div class="comic-info">
+                            <div class="comic-title">Amazing Fantasy #15</div>
+                            <div class="comic-desc">The one that started it all — Peter Parker's first appearance.</div>
+                            <div class="comic-rating-display">
+                                <span class="stars-static" id="disp-af15">★★★★★</span>
+                                <span id="dispval-af15">5.0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Amazing Spider-Man #1 -->
+                <div class="col-6 col-sm-4 col-md-3">
+                    <div class="comic-card" data-id="asm1">
+                        <div class="comic-cover-placeholder cover-classic">
+                            <img class="cover-img"
+                                src="https://upload.wikimedia.org/wikipedia/en/7/70/AmazingSpiderMan1.jpg"
+                                alt="Amazing Spider-Man #1" onerror="this.style.display='none'">
+                            <svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"
+                                style="position:absolute;inset:0;z-index:-1">
+                                <rect width="200" height="300" fill="url(#g1asm)" />
+                                <defs>
+                                    <radialGradient id="g1asm" cx="50%" cy="30%">
+                                        <stop offset="0%" stop-color="#1a0000" />
+                                        <stop offset="100%" stop-color="#050000" />
+                                    </radialGradient>
+                                </defs>
+                                <text x="100" y="200" text-anchor="middle" font-family="Bangers,cursive" font-size="14"
+                                    fill="#FFD700" letter-spacing="2">AMAZING SPIDER-MAN</text>
+                                <text x="100" y="225" text-anchor="middle" font-family="Bangers,cursive" font-size="28"
+                                    fill="#E8001C">#1</text>
+                            </svg>
+                            <div class="comic-overlay">
+                                <div class="overlay-actions">
+                                    <button class="overlay-btn wishlist-btn"
+                                        onclick="toggleWishlist(event,'asm1','Amazing Spider-Man #1')">♥
+                                        Wishlist</button>
+                                    <button class="overlay-btn done-btn"
+                                        onclick="toggleDone(event,'asm1','Amazing Spider-Man #1')">✓ Read</button>
+                                </div>
+                                <div class="star-row" data-id="asm1">
+                                    <span class="star" onclick="rateComic(event,'asm1',1)">★</span>
+                                    <span class="star" onclick="rateComic(event,'asm1',2)">★</span>
+                                    <span class="star" onclick="rateComic(event,'asm1',3)">★</span>
+                                    <span class="star" onclick="rateComic(event,'asm1',4)">★</span>
+                                    <span class="star" onclick="rateComic(event,'asm1',5)">★</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comic-badge">CLASSIC</div>
+                        <div class="wishlist-badge" id="wish-asm1">♥</div>
+                        <div class="done-badge" id="done-asm1">✓</div>
+                        <div class="comic-info">
+                            <div class="comic-title">Amazing Spider-Man #1</div>
+                            <div class="comic-desc">Peter's solo series begins — meets the Fantastic Four.</div>
+                            <div class="comic-rating-display">
+                                <span class="stars-static" id="disp-asm1">★★★★★</span>
+                                <span id="dispval-asm1">4.9</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Miles Morales -->
+                <div class="col-6 col-sm-4 col-md-3">
+                    <div class="comic-card" data-id="miles1">
+                        <div class="comic-cover-placeholder cover-miles">
+                            <img class="cover-img"
+                                src="https://upload.wikimedia.org/wikipedia/en/8/8e/Miles_Morales_Ultimate_Spider-Man_Vol_1_1.jpg"
+                                alt="Miles Morales Spider-Man" onerror="this.style.display='none'">
+                            <svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"
+                                style="position:absolute;inset:0;z-index:-1">
+                                <rect width="200" height="300" fill="url(#g1miles)" />
+                                <defs>
+                                    <radialGradient id="g1miles" cx="50%" cy="30%">
+                                        <stop offset="0%" stop-color="#000040" />
+                                        <stop offset="100%" stop-color="#000010" />
+                                    </radialGradient>
+                                </defs>
+                                <text x="100" y="200" text-anchor="middle" font-family="Bangers,cursive" font-size="15"
+                                    fill="#FFD700" letter-spacing="2">MILES MORALES</text>
+                                <text x="100" y="225" text-anchor="middle" font-family="Bangers,cursive" font-size="13"
+                                    fill="#E8001C">SPIDER-MAN</text>
+                            </svg>
+                            <div class="comic-overlay">
+                                <div class="overlay-actions">
+                                    <button class="overlay-btn wishlist-btn"
+                                        onclick="toggleWishlist(event,'miles1','Miles Morales: Spider-Man')">♥
+                                        Wishlist</button>
+                                    <button class="overlay-btn done-btn"
+                                        onclick="toggleDone(event,'miles1','Miles Morales: Spider-Man')">✓ Read</button>
+                                </div>
+                                <div class="star-row" data-id="miles1">
+                                    <span class="star" onclick="rateComic(event,'miles1',1)">★</span>
+                                    <span class="star" onclick="rateComic(event,'miles1',2)">★</span>
+                                    <span class="star" onclick="rateComic(event,'miles1',3)">★</span>
+                                    <span class="star" onclick="rateComic(event,'miles1',4)">★</span>
+                                    <span class="star" onclick="rateComic(event,'miles1',5)">★</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comic-badge new">HOT</div>
+                        <div class="wishlist-badge" id="wish-miles1">♥</div>
+                        <div class="done-badge" id="done-miles1">✓</div>
+                        <div class="comic-info">
+                            <div class="comic-title">Miles Morales: Spider-Man</div>
+                            <div class="comic-desc">Brooklyn's hero. A new Spider-Man for a new generation.</div>
+                            <div class="comic-rating-display">
+                                <span class="stars-static" id="disp-miles1">★★★★★</span>
+                                <span id="dispval-miles1">4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spider-Gwen -->
+                <div class="col-6 col-sm-4 col-md-3">
+                    <div class="comic-card" data-id="gwen1">
+                        <div class="comic-cover-placeholder cover-gwen">
+                            <img class="cover-img"
+                                src="https://upload.wikimedia.org/wikipedia/en/1/15/Spider-Gwen_Vol_1_1.png"
+                                alt="Spider-Gwen" onerror="this.style.display='none'">
+                            <svg viewBox="0 0 200 300" class="cover-svg" xmlns="http://www.w3.org/2000/svg"
+                                style="position:absolute;inset:0;z-index:-1">
+                                <rect width="200" height="300" fill="url(#g1gwen)" />
+                                <defs>
+                                    <radialGradient id="g1gwen" cx="50%" cy="30%">
+                                        <stop offset="0%" stop-color="#101025" />
+                                        <stop offset="100%" stop-color="#0a0a0a" />
+                                    </radialGradient>
+                                </defs>
+                                <text x="100" y="200" text-anchor="middle" font-family="Bangers,cursive" font-size="20"
+                                    fill="#fff" letter-spacing="2">SPIDER-GWEN</text>
+                                <text x="100" y="225" text-anchor="middle" font-family="Bangers,cursive" font-size="13"
+                                    fill="rgba(255,255,255,0.5)">GHOST SPIDER</text>
+                            </svg>
+                            <div class="comic-overlay">
+                                <div class="overlay-actions">
+                                    <button class="overlay-btn wishlist-btn"
+                                        onclick="toggleWishlist(event,'gwen1','Spider-Gwen')">♥ Wishlist</button>
+                                    <button class="overlay-btn done-btn"
+                                        onclick="toggleDone(event,'gwen1','Spider-Gwen')">✓ Read</button>
+                                </div>
+                                <div class="star-row" data-id="gwen1">
+                                    <span class="star" onclick="rateComic(event,'gwen1',1)">★</span>
+                                    <span class="star" onclick="rateComic(event,'gwen1',2)">★</span>
+                                    <span class="star" onclick="rateComic(event,'gwen1',3)">★</span>
+                                    <span class="star" onclick="rateComic(event,'gwen1',4)">★</span>
+                                    <span class="star" onclick="rateComic(event,'gwen1',5)">★</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comic-badge new">NEW</div>
+                        <div class="wishlist-badge" id="wish-gwen1">♥</div>
+                        <div class="done-badge" id="done-gwen1">✓</div>
+                        <div class="comic-info">
+                            <div class="comic-title">Spider-Gwen</div>
+                            <div class="comic-desc">Ghost Spider swings across dimensions on Earth-65.</div>
+                            <div class="comic-rating-display">
+                                <span class="stars-static" id="disp-gwen1">★★★★☆</span>
+                                <span id="dispval-gwen1">4.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="view-all-wrap">
+            <a href="books.html" class="view-all-btn">View All Comics</a>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <footer>
+        <p>© 2026 <span>Web-Slinger Reviews</span> — All Rights Reserved</p>
+    </footer>
+
+    <div class="toast-custom" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function getInitials(name) { return name.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+        function logout() { localStorage.removeItem('wsreviews_user'); showToast('See you around, hero!'); setTimeout(() => window.location.reload(), 1000); }
+
+        function handleSearch() {
+            const val = document.getElementById('searchInput').value.trim();
+            if (!val) { showToast('⚠ Enter a comic name to search!'); return; }
+            window.location.href = 'books.html?q=' + encodeURIComponent(val);
+        }
+        document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') handleSearch(); });
+
+        // RATINGS
+        function rateComic(e, id, stars) {
+            e.stopPropagation(); e.preventDefault();
+            const ratings = JSON.parse(localStorage.getItem('ws_ratings') || '{}');
+            ratings[id] = stars; localStorage.setItem('ws_ratings', JSON.stringify(ratings));
+            updateStarDisplay(id, stars);
+            const names = { af15: 'Amazing Fantasy #15', asm1: 'Amazing Spider-Man #1', miles1: 'Miles Morales', gwen1: 'Spider-Gwen' };
+            showToast('⭐ Rated ' + stars + '/5 for ' + (names[id] || id) + '!');
+        }
+        function updateStarDisplay(id, stars) {
+            const row = document.querySelector(`.star-row[data-id="${id}"]`);
+            if (row) { row.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('lit', i < stars)); }
+            const disp = document.getElementById('disp-' + id);
+            const dispval = document.getElementById('dispval-' + id);
+            if (disp) { disp.textContent = '★'.repeat(stars) + '☆'.repeat(5 - stars); }
+            if (dispval) { dispval.textContent = stars + '.0'; }
+        }
+        function loadRatings() {
+            const ratings = JSON.parse(localStorage.getItem('ws_ratings') || '{}');
+            Object.entries(ratings).forEach(([id, stars]) => updateStarDisplay(id, stars));
+        }
+
+        // WISHLIST
+        function toggleWishlist(e, id, name) {
+            e.stopPropagation(); e.preventDefault();
+            const wl = JSON.parse(localStorage.getItem('ws_wishlist') || '[]');
+            const idx = wl.findIndex(i => i.id === id);
+            if (idx > -1) { wl.splice(idx, 1); showToast('💔 Removed from Wishlist'); }
+            else { wl.push({ id, name }); showToast('♥ Added to Wishlist!'); }
+            localStorage.setItem('ws_wishlist', JSON.stringify(wl));
+            updateBadges(); updateWishlistCount();
+        }
+        function toggleDone(e, id, name) {
+            e.stopPropagation(); e.preventDefault();
+            const done = JSON.parse(localStorage.getItem('ws_done') || '[]');
+            const idx = done.findIndex(i => i.id === id);
+            if (idx > -1) { done.splice(idx, 1); showToast('📚 Marked as unread'); }
+            else { done.push({ id, name }); showToast('✅ Marked as Read!'); }
+            localStorage.setItem('ws_done', JSON.stringify(done));
+            updateBadges();
+        }
+        function updateBadges() {
+            const wl = JSON.parse(localStorage.getItem('ws_wishlist') || '[]');
+            const done = JSON.parse(localStorage.getItem('ws_done') || '[]');
+            document.querySelectorAll('.wishlist-badge').forEach(el => {
+                const id = el.id.replace('wish-', '');
+                el.classList.toggle('show', wl.some(i => i.id === id));
+            });
+            document.querySelectorAll('.done-badge').forEach(el => {
+                const id = el.id.replace('done-', '');
+                el.classList.toggle('show', done.some(i => i.id === id));
+            });
+        }
+        function updateWishlistCount() {
+            const wl = JSON.parse(localStorage.getItem('ws_wishlist') || '[]');
+            const el = document.getElementById('wishlistCount');
+            if (el) el.textContent = wl.length;
+        }
+
+        // SCROLL ANIMATION
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+        }, { threshold: .15 });
+        document.querySelectorAll('.comic-card').forEach((card, i) => { card.style.transitionDelay = (i * .1) + 's'; observer.observe(card); });
+
+        // ACCOUNT
+        function renderAccount() {
+            const raw = localStorage.getItem('wsreviews_user');
+            const widget = document.getElementById('accountWidget');
+            const navAuthBtn = document.getElementById('navAuthBtn');
+            const welcomeBanner = document.getElementById('welcomeBanner');
+            if (!raw) { widget.innerHTML = `<a href="login.html" class="login-link-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Login</a>`; return; }
+            const user = JSON.parse(raw);
+            welcomeBanner.style.display = 'block';
+            document.getElementById('welcomeName').innerText = user.name.split(' ')[0];
+            navAuthBtn.innerText = 'My Account';
+            const initials = getInitials(user.name);
+            widget.innerHTML = `<div class="account-btn" onclick="toggleDropdown()"><div class="account-avatar">${initials}</div><div class="account-name">${user.name.split(' ')[0]}</div><svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" style="opacity:.5;flex-shrink:0;"><path d="M1 3l4 4 4-4"/></svg></div><div class="account-dropdown" id="accountDropdown"><div class="dropdown-email">${user.email}</div><a href="wishlist.html" class="dropdown-item">♥ My Wishlist</a><button class="dropdown-item logout" onclick="logout()">Log Out</button></div>`;
+        }
+        function toggleDropdown() { const dd = document.getElementById('accountDropdown'); if (dd) dd.classList.toggle('open'); }
+        document.addEventListener('click', e => { const dd = document.getElementById('accountDropdown'); const btn = document.querySelector('.account-btn'); if (dd && btn && !btn.contains(e.target) && !dd.contains(e.target)) dd.classList.remove('open'); });
+
+        renderAccount(); loadRatings(); updateBadges(); updateWishlistCount();
+    </script>
+</body>
+
+</html>
