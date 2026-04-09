@@ -1,0 +1,19 @@
+class Person {
+    String name = "Ram";
+}
+
+class Student extends Person {
+    int id = 101;
+}
+
+class Result extends Student {
+    void display() {
+        System.out.println(name + " " + id);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        new Result().display();
+    }
+}
